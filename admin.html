@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة منتج - لوحة التحكم</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 { font-size: 2rem; color: #f8fafc; }
+        .header p { color: #94a3b8; margin-top: 0.5rem; }
+
+        .card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #334155;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #f1f5f9;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea { min-height: 80px; resize: vertical; }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            padding: 0.5rem 1rem;
+            border: 2px solid #334155;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            user-select: none;
+            transition: all 0.2s;
+            background: #0f172a;
+        }
+
+        .chip:hover { border-color: #60a5fa; }
+        .chip.selected { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .char-count {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-align: left;
+            margin-top: 0.2rem;
+        }
+
+        .char-count.warning { color: #fbbf24; }
+
+        .preview-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
+            color: #4ade80;
+            border: 1px solid #334155;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover { background: #1d4ed8; }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #334155;
+            color: #e2e8f0;
+        }
+
+        .btn-outline:hover { border-color: #60a5fa; }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #16a34a;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 100;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(50px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .error-toast { background: var(--danger); }
+
+        .link-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #0f172a;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px dashed #334155;
+        }
+
+        .link-box a {
+            color: #60a5fa;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>➕ إضافة منتج جديد</h1>
+            <p>املأ البيانات ثم انسخ الكود إلى ملف products.json</p>
+        </div>
+
+        <!-- اسم المنتج -->
+        <div class="card">
+            <h2>📝 اسم المنتج</h2>
+            <div class="form-group">
+                <input type="text" id="title" maxlength="20" placeholder="مثال: حساب Free Fire مستوى 70">
+                <div class="char-count" id="titleCount">20 حرف متبقي</div>
+            </div>
+        </div>
+
+        <!-- الوصف -->
+        <div class="card">
+            <h2>📄 الوصف <span style="color:#94a3b8;font-weight:400;">(اختياري)</span></h2>
+            <div class="form-group">
+                <textarea id="description" maxlength="300" placeholder="صف المنتج..."></textarea>
+                <div class="char-count" id="descCount">300 حرف متبقي</div>
+            </div>
+        </div>
+
+        <!-- الفئة -->
+        <div class="card">
+            <h2>🏷️ الفئة</h2>
+            <div class="chips" id="categoryChips">
+                <span class="chip" data-value="Free Fire">Free Fire</span>
+                <span class="chip" data-value="PUBG">PUBG</span>
+                <span class="chip" data-value="eFootball">eFootball</span>
+                <span class="chip" data-value="Google Play">Google Play</span>
+                <span class="chip" data-value="حسابات">حسابات</span>
+                <span class="chip" data-value="خدمة">خدمة</span>
+                <span class="chip" data-value="أخرى">أخرى</span>
+            </div>
+        </div>
+
+        <!-- نوع الإعلان -->
+        <div class="card">
+            <h2>📢 نوع الإعلان</h2>
+            <div class="chips" id="adTypeChips">
+                <span class="chip" data-value="بيع">بيع</span>
+                <span class="chip" data-value="شراء">شراء</span>
+                <span class="chip" data-value="تبديل">تبديل</span>
+                <span class="chip" data-value="مجاناً">مجاناً</span>
+            </div>
+        </div>
+
+        <!-- السعر -->
+        <div class="card" id="priceCard" style="display:none;">
+            <h2>💰 السعر بـ (دينار جزائري)</h2>
+            <div class="form-group">
+                <input type="number" id="price" placeholder="مثال: 2500" step="0.01">
+            </div>
+        </div>
+
+        <!-- الصورة -->
+        <div class="card">
+            <h2>🖼️ رابط الصورة</h2>
+            <div class="form-group">
+                <input type="text" id="imageUrl" placeholder="https://..." dir="ltr">
+                <div style="font-size:0.8rem;color:#94a3b8;margin-top:0.3rem;">ارفع صورتك على imgur.com أو أي خدمة استضافة صور</div>
+            </div>
+        </div>
+
+        <!-- معاينة JSON -->
+        <div class="card">
+            <h2>📋 كود JSON المُولد</h2>
+            <div class="preview-box" id="jsonPreview">{
+  "id": 1,
+  "title": "",
+  "category": "",
+  "adType": "",
+  "price": null,
+  "image": "",
+  "description": ""
+}</div>
+        </div>
+
+        <!-- أزرار -->
+        <div class="buttons">
+            <button class="btn btn-outline" onclick="copyJSON()">📋 نسخ الكود</button>
+            <button class="btn btn-primary" onclick="openGitHubEditor()">✏️ فتح products.json على GitHub</button>
+        </div>
+
+        <div class="link-box">
+            <p>🔗 رابط ملف المنتجات على GitHub:</p>
+            <a id="githubLink" href="#" target="_blank">استبدل هذا برابط مستودعك</a>
+        </div>
+    </div>
+
+    <script>
+        // المتغيرات
+        let selectedCategory = '';
+        let selectedAdType = '';
+
+        // عداد الحروف للاسم
+        document.getElementById('title').addEventListener('input', function() {
+            const remaining = 20 - this.value.length;
+            const counter = document.getElementById('titleCount');
+            counter.textContent = `${remaining} حرف متبقي`;
+            counter.className = 'char-count';
+            if (remaining <= 5) counter.classList.add('warning');
+            updatePreview();
+        });
+
+        // عداد الحروف للوصف
+        document.getElementById('description').addEventListener('input', function() {
+            const remaining = 300 - this.value.length;
+            const counter = document.getElementById('descCount');
+            counter.textContent = `${remaining} حرف متبقي`;
+            counter.className = 'char-count';
+            if (remaining <= 20) counter.classList.add('warning');
+            updatePreview();
+        });
+
+        // اختيار الفئة
+        document.getElementById('categoryChips').addEventListener('click', function(e) {
+            if (e.target.classList.contains('chip')) {
+                this.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+                e.target.classList.add('selected');
+                selectedCategory = e.target.dataset.value;
+                updatePreview();
+            }
+        });
+
+        // اختيار نوع الإعلان
+        document.getElementById('adTypeChips').addEventListener('click', function(e) {
+            if (e.target.classList.contains('chip')) {
+                this.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+                e.target.classList.add('selected');
+                selectedAdType = e.target.dataset.value;
+                
+                const priceCard = document.getElementById('priceCard');
+                if (selectedAdType === 'بيع' || selectedAdType === 'شراء') {
+                    priceCard.style.display = 'block';
+                } else {
+                    priceCard.style.display = 'none';
+                    document.getElementById('price').value = '';
+                }
+                updatePreview();
+            }
+        });
+
+        // تحديث السعر
+        document.getElementById('price').addEventListener('input', updatePreview);
+        document.getElementById('imageUrl').addEventListener('input', updatePreview);
+
+        // تحديث معاينة JSON
+        function updatePreview() {
+            const product = {
+                id: Date.now(),
+                title: document.getElementById('title').value || '',
+                category: selectedCategory || '',
+                adType: selectedAdType || '',
+                price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : null,
+                image: document.getElementById('imageUrl').value || '',
+                description: document.getElementById('description').value || ''
+            };
+
+            document.getElementById('jsonPreview').textContent = JSON.stringify(product, null, 2);
+        }
+
+        // نسخ JSON
+        function copyJSON() {
+            const jsonText = document.getElementById('jsonPreview').textContent;
+            
+            // التحقق من البيانات
+            const title = document.getElementById('title').value.trim();
+            if (!title) {
+                showToast('❌ أدخل اسم المنتج أولاً', true);
+                return;
+            }
+            if (!selectedCategory) {
+                showToast('❌ اختر الفئة', true);
+                return;
+            }
+            if (!selectedAdType) {
+                showToast('❌ اختر نوع الإعلان', true);
+                return;
+            }
+
+            navigator.clipboard.writeText(jsonText).then(() => {
+                showToast('✅ تم نسخ الكود! الآن الصقه في ملف products.json', false);
+            });
+        }
+
+        // فتح GitHub
+        function openGitHubEditor() {
+            const githubUrl = document.getElementById('githubLink').href;
+            if (githubUrl === '#') {
+                showToast('⚠️ حدث الرابط في الأسفل أولاً', true);
+                return;
+            }
+            window.open(githubUrl, '_blank');
+        }
+
+        // رسالة تنبيه
+        function showToast(message, isError) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isError ? ' error-toast' : '');
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ضبط رابط GitHub
+        document.getElementById('githubLink').addEventListener('click', function(e) {
+            if (this.href === '#') {
+                e.preventDefault();
+                const repo = prompt('أدخل رابط مستودع GitHub الخاص بك:\nمثال: https://github.com/username/repo');
+                if (repo) {
+                    const editUrl = repo.replace('github.com', 'github.com') + '/edit/main/products.json';
+                    this.href = editUrl;
+                    this.textContent = editUrl;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
