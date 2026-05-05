@@ -91,6 +91,8 @@
             cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;z-index:2;
         }
         .hint{font-size:0.78rem;color:var(--text-dim);margin-top:0.3rem}
+        .hint a{color:var(--green-neon);text-decoration:none}
+        .hint a:hover{text-decoration:underline}
         .btn{
             padding:0.7rem 1.5rem;border:none;border-radius:10px;font-size:0.9rem;
             font-weight:700;cursor:pointer;transition:all 0.3s;display:inline-flex;
@@ -104,7 +106,7 @@
         .btn-sm{padding:0.4rem 0.8rem;font-size:0.78rem;border-radius:8px}
         .btn:disabled{opacity:0.5;cursor:not-allowed}
         .table-wrapper{overflow-x:auto}
-        table{width:100%;border-collapse:collapse;min-width:900px}
+        table{width:100%;border-collapse:collapse;min-width:1000px}
         th,td{padding:0.9rem 1rem;text-align:right;border-bottom:1px solid var(--border)}
         th{color:var(--text-dim);font-weight:600;font-size:0.8rem;text-transform:uppercase}
         tr:hover td{background:rgba(16,185,129,0.03)}
@@ -136,6 +138,7 @@
             .main-content{margin-right:0}
             .form-grid{grid-template-columns:1fr}
             .github-config{grid-template-columns:1fr}
+            .price-fields{grid-template-columns:1fr}
         }
     </style>
 </head>
@@ -157,7 +160,6 @@
     </aside>
 
     <main class="main-content">
-        <!-- لوحة التحكم -->
         <div class="page active" id="page-dashboard">
             <div class="dashboard-header"><h1>📊 لوحة التحكم</h1></div>
             <div class="card">
@@ -167,7 +169,6 @@
             </div>
         </div>
 
-        <!-- إضافة منتج -->
         <div class="page" id="page-addProduct">
             <div class="dashboard-header"><h1>➕ إضافة منتج جديد</h1></div>
             <div class="card">
@@ -223,6 +224,11 @@
                         <div class="hint">الصورة تُرفع مباشرة إلى المستودع</div>
                     </div>
                     <div class="form-group full">
+                        <label>📞 رابط التواصل مع البائع</label>
+                        <input type="text" id="addContactLink" placeholder="https://wa.me/213xxxxxxxx أو https://facebook.com/..." dir="ltr">
+                        <div class="hint">الرابط الذي يمكن للزبائن الضغط عليه للتواصل معك مباشرة</div>
+                    </div>
+                    <div class="form-group full">
                         <label>📄 الوصف</label>
                         <textarea id="addDescription" maxlength="300" placeholder="صف المنتج..."></textarea>
                         <div class="char-count" id="addDescCount">300 حرف متبقي</div>
@@ -234,7 +240,6 @@
             </div>
         </div>
 
-        <!-- قائمة المنتجات -->
         <div class="page" id="page-productsList">
             <div class="dashboard-header">
                 <h1>📦 قائمة المنتجات</h1>
@@ -246,14 +251,13 @@
             <div class="card">
                 <div class="table-wrapper">
                     <table>
-                        <thead><tr><th>صورة</th><th>الاسم</th><th>الفئة</th><th>النوع</th><th>الدفع</th><th>DA</th><th>$</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                        <thead><tr><th>صورة</th><th>الاسم</th><th>الفئة</th><th>النوع</th><th>الدفع</th><th>DA</th><th>$</th><th>التواصل</th><th>الحالة</th><th>إجراءات</th></tr></thead>
                         <tbody id="productsTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- الإعدادات -->
         <div class="page" id="page-settings">
             <div class="dashboard-header"><h1>⚙️ الإعدادات</h1></div>
             <div class="card">
@@ -261,7 +265,7 @@
                 <div class="github-config">
                     <div class="form-group"><label>اسم المستخدم</label><input type="text" id="githubUsername"></div>
                     <div class="form-group"><label>اسم المستودع</label><input type="text" id="githubRepo"></div>
-                    <div class="form-group full"><label>Token</label><input type="password" id="githubToken"><div class="hint">من <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--green-neon);">GitHub</a> بصلاحية repo</div></div>
+                    <div class="form-group full"><label>Token</label><input type="password" id="githubToken"><div class="hint">من <a href="https://github.com/settings/tokens" target="_blank">GitHub</a> بصلاحية repo</div></div>
                 </div>
                 <button class="btn btn-neon btn-sm" id="saveGithubBtn">💾 حفظ</button>
                 <button class="btn btn-outline btn-sm" id="testConnectionBtn">🔍 اختبار الاتصال</button>
@@ -284,7 +288,6 @@
     </main>
 </div>
 
-<!-- مودال التعديل -->
 <div class="modal-overlay" id="editModal">
     <div class="modal">
         <h2>✏️ تعديل المنتج</h2>
@@ -296,7 +299,8 @@
             <div class="form-group"><label>طرق الدفع</label><div class="chips-row" id="editPaymentMethodChips"></div></div>
             <div class="form-group"><label>السعر DA</label><input type="number" id="editPriceDA" step="0.01"></div>
             <div class="form-group"><label>السعر $</label><input type="number" id="editPriceUSD" step="0.01"></div>
-            <div class="form-group full"><label>رابط الصورة</label><input type="text" id="editImageUrl" dir="ltr" placeholder="المسار الحالي أو رابط جديد"></div>
+            <div class="form-group full"><label>رابط الصورة</label><input type="text" id="editImageUrl" dir="ltr"></div>
+            <div class="form-group full"><label>📞 رابط التواصل</label><input type="text" id="editContactLink" dir="ltr"></div>
             <div class="form-group full"><label>الوصف</label><textarea id="editDescription" maxlength="300"></textarea></div>
             <div class="form-group"><label>الحالة</label><select id="editStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select></div>
         </div>
@@ -310,13 +314,11 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ========== المتغيرات ==========
 let products = [];
 let storeOpen = true;
 let selectedImageFile = null;
 let addCategory = '', addAdType = '', addPaymentMethods = [];
 
-// ========== التنقل ==========
 function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
@@ -324,11 +326,8 @@ function showPage(name) {
     document.querySelector(`[data-page="${name}"]`).classList.add('active');
     if (name === 'productsList' || name === 'dashboard') loadProducts();
 }
-document.querySelectorAll('.sidebar-nav button').forEach(b => {
-    b.addEventListener('click', () => showPage(b.dataset.page));
-});
+document.querySelectorAll('.sidebar-nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
 
-// ========== إعدادات GitHub ==========
 function getConfig() {
     return {
         username: localStorage.getItem('gh_user') || '',
@@ -353,23 +352,12 @@ async function testConnection() {
     statusEl.textContent = '⏳ جاري الفحص...';
     statusEl.style.color = 'var(--warning)';
     try {
-        const res = await fetch(`https://api.github.com/repos/${c.username}/${c.repo}`, {
-            headers: { 'Authorization': `token ${c.token}` }
-        });
-        if (res.ok) {
-            statusEl.textContent = '✅ الاتصال ناجح';
-            statusEl.style.color = 'var(--green-glow)';
-        } else {
-            statusEl.textContent = '❌ فشل - تأكد من البيانات';
-            statusEl.style.color = 'var(--danger-glow)';
-        }
-    } catch (e) {
-        statusEl.textContent = '❌ خطأ في الشبكة';
-        statusEl.style.color = 'var(--danger-glow)';
-    }
+        const res = await fetch(`https://api.github.com/repos/${c.username}/${c.repo}`, { headers: { 'Authorization': `token ${c.token}` } });
+        if (res.ok) { statusEl.textContent = '✅ الاتصال ناجح'; statusEl.style.color = 'var(--green-glow)'; }
+        else { statusEl.textContent = '❌ فشل - تأكد من البيانات'; statusEl.style.color = 'var(--danger-glow)'; }
+    } catch (e) { statusEl.textContent = '❌ خطأ في الشبكة'; statusEl.style.color = 'var(--danger-glow)'; }
 }
 
-// ========== تحميل المنتجات ==========
 async function loadProducts() {
     try {
         const res = await fetch(`products.json?t=${Date.now()}`, { cache: 'no-store' });
@@ -391,7 +379,7 @@ function updateStats() {
 function renderTable() {
     const tbody = document.getElementById('productsTableBody');
     if (products.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);">لا توجد منتجات</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-dim);">لا توجد منتجات</td></tr>';
         return;
     }
     tbody.innerHTML = products.map((p, i) => `
@@ -403,6 +391,7 @@ function renderTable() {
             <td>${(p.paymentMethods || []).join(' · ') || '—'}</td>
             <td>${p.priceDA || '—'}</td>
             <td>${p.priceUSD || '—'}</td>
+            <td>${p.contactLink ? `<a href="${p.contactLink}" target="_blank" style="color:var(--green-neon);">🔗 رابط</a>` : '—'}</td>
             <td><span class="status-badge ${p.status === 'inactive' ? 'status-inactive' : 'status-active'}">${p.status === 'inactive' ? 'غير نشط' : 'نشط'}</span></td>
             <td class="actions-cell">
                 <button class="btn btn-outline btn-sm" onclick="openEdit(${i})">✏️</button>
@@ -413,7 +402,6 @@ function renderTable() {
     `).join('');
 }
 
-// ========== مزامنة الملفات ==========
 async function syncFile(path, content, msg) {
     const c = getConfig();
     if (!c.token) return false;
@@ -424,87 +412,47 @@ async function syncFile(path, content, msg) {
         if (getRes.ok) { const d = await getRes.json(); sha = d.sha; }
         const body = { message: msg, content: btoa(unescape(encodeURIComponent(content))), branch: 'main' };
         if (sha) body.sha = sha;
-        const putRes = await fetch(api, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${c.token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
+        const putRes = await fetch(api, { method: 'PUT', headers: { 'Authorization': `token ${c.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         return putRes.ok;
     } catch (e) { console.error(e); return false; }
 }
-async function syncProducts() {
-    return await syncFile('products.json', JSON.stringify(products, null, 2), 'تحديث المنتجات');
-}
-async function syncConfigFile() {
-    return await syncFile('config.json', JSON.stringify({ storeOpen }), 'تحديث حالة المتجر');
-}
+async function syncProducts() { return await syncFile('products.json', JSON.stringify(products, null, 2), 'تحديث المنتجات'); }
+async function syncConfigFile() { return await syncFile('config.json', JSON.stringify({ storeOpen }), 'تحديث حالة المتجر'); }
 
-// ========== رفع الصورة (مصححة) ==========
 async function uploadImage(file) {
     const c = getConfig();
     if (!c.token) throw new Error('إعدادات GitHub غير مكتملة');
-
     const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    // نرفع الصورة مباشرة في جذر المستودع بدون مجلدات لتجنب مشكلة المسارات
     const path = `img_${Date.now()}_${cleanName}`;
-
     const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => { resolve(reader.result.split(',')[1]); };
         reader.onerror = () => reject(new Error('فشل قراءة الملف'));
         reader.readAsDataURL(file);
     });
-
     const api = `https://api.github.com/repos/${c.username}/${c.repo}/contents/${path}`;
-
-    const body = {
-        message: `رفع صورة ${path}`,
-        content: base64,
-        branch: 'main'
-    };
-
     const res = await fetch(api, {
         method: 'PUT',
-        headers: {
-            'Authorization': `token ${c.token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/vnd.github.v3+json'
-        },
-        body: JSON.stringify(body)
+        headers: { 'Authorization': `token ${c.token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+        body: JSON.stringify({ message: `رفع صورة ${path}`, content: base64, branch: 'main' })
     });
-
     if (!res.ok) {
         const err = await res.json();
-        console.error('خطأ رفع الصورة:', err);
-        
-        // إذا كان الملف موجوداً مسبقاً، نضيف رقم عشوائي
         if (err.message && err.message.includes('already exists')) {
             const newPath = `img_${Date.now()}_${Math.random().toString(36).substr(2,8)}_${cleanName}`;
-            const newApi = `https://api.github.com/repos/${c.username}/${c.repo}/contents/${newPath}`;
-            const newBody = { message: `رفع صورة ${newPath}`, content: base64, branch: 'main' };
-            const retryRes = await fetch(newApi, {
+            const retryRes = await fetch(`https://api.github.com/repos/${c.username}/${c.repo}/contents/${newPath}`, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `token ${c.token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                },
-                body: JSON.stringify(newBody)
+                headers: { 'Authorization': `token ${c.token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+                body: JSON.stringify({ message: `رفع صورة ${newPath}`, content: base64, branch: 'main' })
             });
-            if (!retryRes.ok) {
-                const retryErr = await retryRes.json();
-                throw new Error(retryErr.message || 'فشل رفع الصورة');
-            }
+            if (!retryRes.ok) { const retryErr = await retryRes.json(); throw new Error(retryErr.message || 'فشل رفع الصورة'); }
             return newPath;
         }
-        
         throw new Error(err.message || 'فشل رفع الصورة');
     }
-
     return path;
 }
 
-// ========== إضافة منتج ==========
 document.getElementById('addCategoryChips').addEventListener('click', e => {
     if (!e.target.classList.contains('chip')) return;
     document.querySelectorAll('#addCategoryChips .chip').forEach(c => c.classList.remove('selected'));
@@ -537,12 +485,8 @@ document.getElementById('addPaymentMethodChips').addEventListener('click', e => 
     document.getElementById('addPriceDAField').classList.toggle('visible', da);
     document.getElementById('addPriceUSDField').classList.toggle('visible', usd);
 });
-document.getElementById('addTitle').addEventListener('input', function () {
-    document.getElementById('addTitleCount').textContent = (20 - this.value.length) + ' حرف متبقي';
-});
-document.getElementById('addDescription').addEventListener('input', function () {
-    document.getElementById('addDescCount').textContent = (300 - this.value.length) + ' حرف متبقي';
-});
+document.getElementById('addTitle').addEventListener('input', function () { document.getElementById('addTitleCount').textContent = (20 - this.value.length) + ' حرف متبقي'; });
+document.getElementById('addDescription').addEventListener('input', function () { document.getElementById('addDescCount').textContent = (300 - this.value.length) + ' حرف متبقي'; });
 document.getElementById('imageUploadArea').addEventListener('click', () => document.getElementById('addImageFile').click());
 document.getElementById('addImageFile').addEventListener('change', e => {
     const file = e.target.files[0];
@@ -568,58 +512,34 @@ document.getElementById('removeImageBtn').addEventListener('click', (e) => {
 
 async function addProduct() {
     const title = document.getElementById('addTitle').value.trim();
+    const contactLink = document.getElementById('addContactLink').value.trim();
     if (!title) return showToast('❌ أدخل اسم المنتج', 'error');
     if (!addCategory) return showToast('❌ اختر الفئة', 'error');
     if (!addAdType) return showToast('❌ اختر نوع الإعلان', 'error');
-    
     const btn = document.getElementById('addProductBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ جاري الرفع...';
-    
+    btn.disabled = true; btn.textContent = '⏳ جاري الرفع...';
     let imagePath = '';
     if (selectedImageFile) {
-        try {
-            imagePath = await uploadImage(selectedImageFile);
-            showToast('✅ تم رفع الصورة بنجاح', 'success');
-        } catch (e) {
-            showToast('❌ فشل رفع الصورة: ' + e.message, 'error');
-            btn.disabled = false;
-            btn.textContent = '🚀 إضافة المنتج';
-            return;
-        }
+        try { imagePath = await uploadImage(selectedImageFile); showToast('✅ تم رفع الصورة بنجاح', 'success'); }
+        catch (e) { showToast('❌ فشل رفع الصورة: ' + e.message, 'error'); btn.disabled = false; btn.textContent = '🚀 إضافة المنتج'; return; }
     }
-    
     const np = {
-        id: Date.now(),
-        title,
-        category: addCategory,
-        adType: addAdType,
+        id: Date.now(), title, category: addCategory, adType: addAdType,
         paymentMethods: (addAdType === 'بيع' || addAdType === 'شراء') ? addPaymentMethods : [],
         priceDA: (addAdType === 'بيع' || addAdType === 'شراء') ? (parseFloat(document.getElementById('addPriceDA').value) || null) : null,
         priceUSD: (addAdType === 'بيع' || addAdType === 'شراء') ? (parseFloat(document.getElementById('addPriceUSD').value) || null) : null,
-        image: imagePath,
-        description: document.getElementById('addDescription').value.trim(),
-        status: 'active'
+        image: imagePath, description: document.getElementById('addDescription').value.trim(),
+        contactLink: contactLink, status: 'active'
     };
-    
     products.push(np);
-    if (await syncProducts()) {
-        updateStats();
-        renderTable();
-        resetAddForm();
-        showToast('✅ تم النشر بنجاح', 'success');
-    } else {
-        products.pop();
-        showToast('❌ فشلت المزامنة', 'error');
-    }
-    
-    btn.disabled = false;
-    btn.textContent = '🚀 إضافة المنتج';
+    if (await syncProducts()) { updateStats(); renderTable(); resetAddForm(); showToast('✅ تم النشر بنجاح', 'success'); }
+    else { products.pop(); showToast('❌ فشلت المزامنة', 'error'); }
+    btn.disabled = false; btn.textContent = '🚀 إضافة المنتج';
 }
-
 function resetAddForm() {
     document.getElementById('addTitle').value = '';
     document.getElementById('addDescription').value = '';
+    document.getElementById('addContactLink').value = '';
     document.getElementById('addPriceDA').value = '';
     document.getElementById('addPriceUSD').value = '';
     document.querySelectorAll('#addCategoryChips .chip, #addAdTypeChips .chip, #addPaymentMethodChips .chip').forEach(c => c.classList.remove('selected'));
@@ -637,10 +557,8 @@ function resetAddForm() {
 }
 document.getElementById('addProductBtn').addEventListener('click', addProduct);
 
-// ========== تعديل ==========
 let editIndex = -1;
 const editModal = document.getElementById('editModal');
-
 function openEdit(index) {
     editIndex = index;
     const p = products[index];
@@ -649,6 +567,7 @@ function openEdit(index) {
     document.getElementById('editPriceDA').value = p.priceDA || '';
     document.getElementById('editPriceUSD').value = p.priceUSD || '';
     document.getElementById('editImageUrl').value = p.image || '';
+    document.getElementById('editContactLink').value = p.contactLink || '';
     document.getElementById('editDescription').value = p.description || '';
     document.getElementById('editStatus').value = p.status;
     renderChips('editCategoryChips', ['Free Fire', 'PUBG', 'eFootball', 'Google Play', '$', 'خدمة', 'أخرى'], [p.category]);
@@ -656,25 +575,16 @@ function openEdit(index) {
     renderChips('editPaymentMethodChips', ['فليكسي', 'بريدي موب', 'CCP', '$', 'نقداً'], p.paymentMethods || []);
     editModal.classList.add('show');
 }
-
 function renderChips(id, values, selected) {
     const cnt = document.getElementById(id);
     cnt.innerHTML = values.map(v => `<span class="chip${selected.includes(v) ? ' selected' : ''}" data-value="${v}">${v}</span>`).join('');
     cnt.onclick = (e) => {
         if (!e.target.classList.contains('chip')) return;
-        if (id === 'editCategoryChips' || id === 'editAdTypeChips') {
-            cnt.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-            e.target.classList.add('selected');
-        } else {
-            e.target.classList.toggle('selected');
-        }
+        if (id === 'editCategoryChips' || id === 'editAdTypeChips') { cnt.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); e.target.classList.add('selected'); }
+        else { e.target.classList.toggle('selected'); }
     };
 }
-
-function getSelected(id) {
-    return Array.from(document.querySelectorAll(`#${id} .chip.selected`)).map(c => c.dataset.value);
-}
-
+function getSelected(id) { return Array.from(document.querySelectorAll(`#${id} .chip.selected`)).map(c => c.dataset.value); }
 async function saveEdit() {
     const p = products[editIndex];
     p.title = document.getElementById('editTitle').value.trim();
@@ -684,56 +594,37 @@ async function saveEdit() {
     p.priceDA = parseFloat(document.getElementById('editPriceDA').value) || null;
     p.priceUSD = parseFloat(document.getElementById('editPriceUSD').value) || null;
     p.image = document.getElementById('editImageUrl').value.trim();
+    p.contactLink = document.getElementById('editContactLink').value.trim();
     p.description = document.getElementById('editDescription').value.trim();
     p.status = document.getElementById('editStatus').value;
-    
-    if (await syncProducts()) {
-        updateStats();
-        renderTable();
-        closeEdit();
-        showToast('✅ تم الحفظ', 'success');
-    }
+    if (await syncProducts()) { updateStats(); renderTable(); closeEdit(); showToast('✅ تم الحفظ', 'success'); }
 }
-
 function closeEdit() { editModal.classList.remove('show'); }
 document.getElementById('cancelEditBtn').addEventListener('click', closeEdit);
 document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
 editModal.addEventListener('click', e => { if (e.target === editModal) closeEdit(); });
 
-// ========== حذف / تفعيل ==========
 async function deleteProduct(index) {
     if (!confirm('متأكد من حذف "' + products[index].title + '"؟')) return;
     products.splice(index, 1);
     if (await syncProducts()) { updateStats(); renderTable(); showToast('🗑️ تم الحذف', 'info'); }
 }
-
 async function toggleStatus(index) {
     products[index].status = products[index].status === 'inactive' ? 'active' : 'inactive';
     if (await syncProducts()) { updateStats(); renderTable(); }
 }
-
-// ========== إغلاق المتجر ==========
 async function toggleStore() {
     storeOpen = !storeOpen;
     localStorage.setItem('storeOpen', storeOpen);
     const toggle = document.getElementById('storeToggle');
     const label = document.getElementById('storeStatusLabel');
     const text = document.getElementById('storeStatusText');
-    if (storeOpen) {
-        toggle.classList.add('active');
-        label.innerHTML = '🟢 مفتوح'; label.style.color = 'var(--green-glow)';
-        text.textContent = '🟢 مفتوح'; text.style.color = 'var(--green-glow)';
-    } else {
-        toggle.classList.remove('active');
-        label.innerHTML = '🔴 مغلق'; label.style.color = 'var(--danger-glow)';
-        text.textContent = '🔴 مغلق'; text.style.color = 'var(--danger-glow)';
-    }
+    if (storeOpen) { toggle.classList.add('active'); label.innerHTML = '🟢 مفتوح'; label.style.color = 'var(--green-glow)'; text.textContent = '🟢 مفتوح'; text.style.color = 'var(--green-glow)'; }
+    else { toggle.classList.remove('active'); label.innerHTML = '🔴 مغلق'; label.style.color = 'var(--danger-glow)'; text.textContent = '🔴 مغلق'; text.style.color = 'var(--danger-glow)'; }
     await syncConfigFile();
     showToast(storeOpen ? '🟢 المتجر مفتوح' : '🔴 المتجر مغلق', 'info');
 }
 document.getElementById('storeToggle').addEventListener('click', toggleStore);
-
-// ========== تحقق من التحديث ==========
 async function checkIfUpdated() {
     try {
         const res = await fetch(`products.json?t=${Date.now()}`, { cache: 'no-store' });
@@ -742,16 +633,12 @@ async function checkIfUpdated() {
         else { products = server; updateStats(); renderTable(); showToast('🔄 تم جلب البيانات الجديدة', 'info'); }
     } catch { showToast('❌ تعذر التحقق', 'error'); }
 }
-
-// ========== حذف الكل ==========
 async function deleteAllProducts() {
     if (!confirm('⚠️ حذف جميع المنتجات؟')) return;
     if (!confirm('تأكيد نهائي؟')) return;
     products = [];
     if (await syncProducts()) { updateStats(); renderTable(); showToast('🗑️ تم حذف الكل', 'error'); }
 }
-
-// ========== توست ==========
 function showToast(msg, type) {
     const t = document.createElement('div');
     t.className = `toast toast-${type}`;
@@ -760,19 +647,16 @@ function showToast(msg, type) {
     setTimeout(() => t.remove(), 3000);
 }
 
-// ========== ربط الأزرار ==========
 document.getElementById('saveGithubBtn').addEventListener('click', saveConfig);
 document.getElementById('testConnectionBtn').addEventListener('click', testConnection);
 document.getElementById('checkUpdateBtn').addEventListener('click', checkIfUpdated);
 document.getElementById('refreshProductsBtn').addEventListener('click', loadProducts);
 document.getElementById('deleteAllBtn').addEventListener('click', deleteAllProducts);
 
-// ========== بدء التشغيل ==========
 const saved = getConfig();
 if (saved.username) document.getElementById('githubUsername').value = saved.username;
 if (saved.repo) document.getElementById('githubRepo').value = saved.repo;
 if (saved.token) document.getElementById('githubToken').value = saved.token;
-
 storeOpen = localStorage.getItem('storeOpen') !== 'false';
 if (!storeOpen) {
     document.getElementById('storeToggle').classList.remove('active');
@@ -781,7 +665,6 @@ if (!storeOpen) {
     document.getElementById('storeStatusText').textContent = '🔴 مغلق';
     document.getElementById('storeStatusText').style.color = 'var(--danger-glow)';
 }
-
 loadProducts();
 </script>
 </body>
