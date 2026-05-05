@@ -3,55 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة منتج - لوحة التحكم</title>
+    <title>لوحة تحكم بازارك</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --border: #e2e8f0;
+            --bg-dark: #0a0f0a;
+            --bg-card: #0d1a0d;
+            --bg-input: #111d11;
+            --green-dark: #0d3320;
+            --green-mid: #059669;
+            --green-neon: #10b981;
+            --green-glow: #34d399;
+            --text-primary: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #1a3a2a;
             --danger: #ef4444;
+            --danger-glow: #fca5a5;
+            --warning: #f59e0b;
+            --blue-neon: #38bdf8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at top, rgba(16, 185, 129, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(5, 150, 105, 0.08) 0%, transparent 60%);
+        }
+
+        /* ========== الشريط الجانبي ========== */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #060d06;
+            border-left: 2px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20;
+            box-shadow: -4px 0 30px rgba(16, 185, 129, 0.08);
+        }
+
+        .sidebar-logo {
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--green-neon), var(--green-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .sidebar-nav button {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-dim);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-align: right;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar-nav button:hover {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--green-glow);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .sidebar-nav button.active {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--green-neon);
+            border-color: var(--green-mid);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+            font-weight: 700;
+        }
+
+        .sidebar-stats {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .stat-value {
+            color: var(--green-glow);
+            font-weight: 700;
+        }
+
+        /* ========== المحتوى الرئيسي ========== */
+        .main-content {
+            flex: 1;
+            margin-right: 260px;
             padding: 2rem;
         }
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
+        .page {
+            display: none;
         }
 
-        .header {
-            text-align: center;
+        .page.active {
+            display: block;
+        }
+
+        /* ========== الهيدر ========== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
         }
 
-        .header h1 { font-size: 2rem; color: #f8fafc; }
-        .header p { color: #94a3b8; margin-top: 0.5rem; }
-
-        .card {
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #334155;
+        .dashboard-header h1 {
+            font-size: 1.8rem;
+            color: var(--green-glow);
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
         }
 
-        .card h2 {
-            font-size: 1.2rem;
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        /* ========== البطاقات ========== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.2rem;
-            color: #f1f5f9;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--green-neon);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ========== نموذج الإضافة ========== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
         .form-group {
             margin-bottom: 1.2rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
         }
 
         .form-group label {
@@ -59,363 +203,844 @@
             margin-bottom: 0.4rem;
             font-weight: 600;
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: var(--text-dim);
         }
 
-        input, textarea, select {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: 0.7rem 1rem;
-            background: #0f172a;
-            border: 2px solid #334155;
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            color: #f1f5f9;
-            font-size: 1rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
             font-family: inherit;
-            transition: border 0.2s;
+            transition: all 0.3s;
         }
 
-        input:focus, textarea:focus, select:focus {
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--green-mid);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
         }
 
-        textarea { min-height: 80px; resize: vertical; }
+        textarea { min-height: 90px; resize: vertical; }
 
-        .chips {
+        .char-count {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.3rem;
+            text-align: left;
+        }
+
+        .char-count.warning { color: var(--warning); }
+        .char-count.danger { color: var(--danger); }
+
+        /* ========== الرقاقات ========== */
+        .chips-row {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
 
         .chip {
-            padding: 0.5rem 1rem;
-            border: 2px solid #334155;
+            padding: 0.55rem 1.1rem;
+            border: 1px solid var(--border);
             border-radius: 25px;
             cursor: pointer;
-            font-size: 0.9rem;
-            user-select: none;
-            transition: all 0.2s;
-            background: #0f172a;
-        }
-
-        .chip:hover { border-color: #60a5fa; }
-        .chip.selected { background: var(--primary); border-color: var(--primary); color: white; }
-
-        .char-count {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            text-align: left;
-            margin-top: 0.2rem;
-        }
-
-        .char-count.warning { color: #fbbf24; }
-
-        .preview-box {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 1rem;
-            max-height: 250px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
             font-size: 0.85rem;
-            white-space: pre-wrap;
-            direction: ltr;
-            text-align: left;
-            color: #4ade80;
-            border: 1px solid #334155;
+            transition: all 0.25s;
+            background: var(--bg-input);
+            user-select: none;
+            color: var(--text-dim);
         }
 
-        .buttons {
-            display: flex;
+        .chip:hover {
+            border-color: var(--green-mid);
+            color: var(--green-glow);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.12);
+        }
+
+        .chip.selected {
+            background: var(--green-dark);
+            border-color: var(--green-neon);
+            color: var(--green-glow);
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.25);
+            font-weight: 600;
+        }
+
+        /* ========== رفع الصور ========== */
+        .image-upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-input);
+        }
+
+        .image-upload-zone:hover {
+            border-color: var(--green-mid);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .previews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
 
-        .btn {
-            flex: 1;
-            padding: 0.9rem;
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-img {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.4rem;
+            background: var(--danger);
+            color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .preview-item:hover .remove-img { opacity: 1; }
+
+        .add-more-btn {
+            aspect-ratio: 1;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-dim);
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
+        .add-more-btn:hover {
+            border-color: var(--green-mid);
+            color: var(--green-neon);
         }
 
-        .btn-primary:hover { background: #1d4ed8; }
+        /* ========== الأزرار ========== */
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-neon {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-neon:hover {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.55);
+            transform: translateY(-2px);
+        }
 
         .btn-outline {
             background: transparent;
-            border: 2px solid #334155;
-            color: #e2e8f0;
+            border: 1px solid var(--green-mid);
+            color: var(--green-neon);
         }
 
-        .btn-outline:hover { border-color: #60a5fa; }
+        .btn-outline:hover {
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.15);
+        }
 
-        .toast {
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 0 35px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.78rem;
+            border-radius: 8px;
+        }
+
+        /* ========== جدول المنتجات ========== */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 0.9rem 1rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .products-table th {
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .products-table tr:hover td {
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--green-glow);
+        }
+
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-glow);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        /* ========== مودال التعديل ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 650px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 0 60px rgba(16, 185, 129, 0.2);
+        }
+
+        .modal h2 {
+            color: var(--green-glow);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        /* ========== توست ========== */
+        .toast-container {
             position: fixed;
             bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #16a34a;
-            color: white;
-            padding: 1rem 2rem;
+            left: 2rem;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
             border-radius: 12px;
             font-weight: 600;
-            z-index: 100;
-            animation: slideUp 0.3s ease;
+            animation: slideIn 0.3s ease;
+            color: white;
+            min-width: 280px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(50px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast-success { background: var(--green-mid); }
+        .toast-error { background: var(--danger); }
+        .toast-info { background: #1e3a5f; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        .error-toast { background: var(--danger); }
-
-        .link-box {
-            margin-top: 1rem;
+        /* ========== ستاتس المتجر ========== */
+        .store-status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             padding: 1rem;
-            background: #0f172a;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px dashed #334155;
+            background: var(--bg-input);
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
-        .link-box a {
-            color: #60a5fa;
-            word-break: break-all;
+        .toggle-switch {
+            width: 56px;
+            height: 30px;
+            background: #374151;
+            border-radius: 30px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--green-mid);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            transition: right 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            right: 29px;
+        }
+
+        /* ========== استجابة ========== */
+        @media (max-width: 900px) {
+            .sidebar { width: 100%; height: auto; position: relative; border-left: none; border-bottom: 2px solid var(--border); }
+            .layout { flex-direction: column; }
+            .main-content { margin-right: 0; }
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>➕ إضافة منتج جديد</h1>
-            <p>املأ البيانات ثم انسخ الكود إلى ملف products.json</p>
-        </div>
+    <div class="layout">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">بازارك</div>
+            <nav class="sidebar-nav">
+                <button class="active" onclick="showPage('dashboard')">📊 لوحة التحكم</button>
+                <button onclick="showPage('addProduct')">➕ إضافة منتج</button>
+                <button onclick="showPage('productsList')">📦 المنتجات</button>
+                <button onclick="showPage('settings')">⚙️ الإعدادات</button>
+            </nav>
+            <div class="sidebar-stats">
+                <div class="stat-item"><span>المنتجات:</span><span class="stat-value" id="totalProducts">0</span></div>
+                <div class="stat-item"><span>النشطة:</span><span class="stat-value" id="activeProducts">0</span></div>
+                <div class="stat-item"><span>حالة المتجر:</span><span class="stat-value" id="storeStatusText">مفتوح 🟢</span></div>
+            </div>
+        </aside>
 
-        <!-- اسم المنتج -->
-        <div class="card">
-            <h2>📝 اسم المنتج</h2>
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- صفحة لوحة التحكم -->
+            <div class="page active" id="page-dashboard">
+                <div class="dashboard-header">
+                    <h1>📊 لوحة التحكم</h1>
+                </div>
+                <div class="card">
+                    <div class="card-title">📈 نظرة عامة</div>
+                    <p style="color:var(--text-dim);">إجمالي المنتجات: <strong id="dashTotal" style="color:var(--green-glow);">0</strong></p>
+                    <p style="color:var(--text-dim);">المنتجات النشطة: <strong id="dashActive" style="color:var(--green-glow);">0</strong></p>
+                </div>
+            </div>
+
+            <!-- صفحة إضافة منتج -->
+            <div class="page" id="page-addProduct">
+                <div class="dashboard-header">
+                    <h1>➕ إضافة منتج جديد</h1>
+                </div>
+                <div class="card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>اسم المنتج *</label>
+                            <input type="text" id="addTitle" maxlength="20" placeholder="مثال: حساب Free Fire">
+                            <div class="char-count" id="addTitleCount">20 متبقي</div>
+                        </div>
+                        <div class="form-group">
+                            <label>الفئة *</label>
+                            <div class="chips-row" id="addCategoryChips">
+                                <span class="chip" data-value="Free Fire">Free Fire</span>
+                                <span class="chip" data-value="PUBG">PUBG</span>
+                                <span class="chip" data-value="eFootball">eFootball</span>
+                                <span class="chip" data-value="Google Play">Google Play</span>
+                                <span class="chip" data-value="$">$</span>
+                                <span class="chip" data-value="خدمة">خدمة</span>
+                                <span class="chip" data-value="أخرى">أخرى</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>نوع الإعلان *</label>
+                            <div class="chips-row" id="addAdTypeChips">
+                                <span class="chip" data-value="بيع">بيع</span>
+                                <span class="chip" data-value="شراء">شراء</span>
+                                <span class="chip" data-value="تبديل">تبديل</span>
+                                <span class="chip" data-value="مجاناً">مجاناً</span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="addPriceGroup" style="display:none;">
+                            <label>السعر (د.ج) *</label>
+                            <input type="number" id="addPrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group full">
+                            <label>الوصف</label>
+                            <textarea id="addDescription" maxlength="300" placeholder="وصف المنتج..."></textarea>
+                            <div class="char-count" id="addDescCount">300 متبقي</div>
+                        </div>
+                        <div class="form-group full">
+                            <label>رابط الصورة</label>
+                            <input type="text" id="addImageUrl" placeholder="https://..." dir="ltr">
+                            <small style="color:var(--text-dim);">ارفع صورتك على imgur.com ثم الصق الرابط هنا</small>
+                        </div>
+                    </div>
+                    <div style="margin-top:1.5rem; text-align:left;">
+                        <button class="btn btn-neon" onclick="addProduct()">🚀 إضافة المنتج</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة المنتجات -->
+            <div class="page" id="page-productsList">
+                <div class="dashboard-header">
+                    <h1>📦 قائمة المنتجات</h1>
+                    <button class="btn btn-neon btn-sm" onclick="exportJSON()">📤 تصدير JSON</button>
+                </div>
+                <div class="card">
+                    <div style="overflow-x:auto;">
+                        <table class="products-table">
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>الاسم</th>
+                                    <th>الفئة</th>
+                                    <th>النوع</th>
+                                    <th>السعر</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <tr><td colspan="7" style="text-align:center;">لا توجد منتجات</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة الإعدادات -->
+            <div class="page" id="page-settings">
+                <div class="dashboard-header">
+                    <h1>⚙️ إعدادات المتجر</h1>
+                </div>
+                <div class="card">
+                    <div class="card-title">🔌 حالة المتجر</div>
+                    <div class="store-status-toggle">
+                        <span>المتجر:</span>
+                        <span id="storeStatusLabel" style="color:var(--green-glow);font-weight:700;">مفتوح 🟢</span>
+                        <div class="toggle-switch active" id="storeToggle" onclick="toggleStore()"></div>
+                    </div>
+                    <p style="color:var(--text-dim);margin-top:0.5rem;font-size:0.85rem;">عند الإيقاف، تظهر رسالة صيانة للزوار</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">🗑️ حذف جميع المنتجات</div>
+                    <p style="color:var(--danger-glow);margin-bottom:1rem;">هذا الإجراء لا يمكن التراجع عنه!</p>
+                    <button class="btn btn-danger" onclick="deleteAllProducts()">🗑️ حذف الكل</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- مودال التعديل -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h2>✏️ تعديل المنتج</h2>
+            <input type="hidden" id="editId">
             <div class="form-group">
-                <input type="text" id="title" maxlength="20" placeholder="مثال: حساب Free Fire مستوى 70">
-                <div class="char-count" id="titleCount">20 حرف متبقي</div>
+                <label>اسم المنتج</label>
+                <input type="text" id="editTitle" maxlength="20">
             </div>
-        </div>
-
-        <!-- الوصف -->
-        <div class="card">
-            <h2>📄 الوصف <span style="color:#94a3b8;font-weight:400;">(اختياري)</span></h2>
             <div class="form-group">
-                <textarea id="description" maxlength="300" placeholder="صف المنتج..."></textarea>
-                <div class="char-count" id="descCount">300 حرف متبقي</div>
+                <label>الفئة</label>
+                <div class="chips-row" id="editCategoryChips">
+                    <span class="chip" data-value="Free Fire">Free Fire</span>
+                    <span class="chip" data-value="PUBG">PUBG</span>
+                    <span class="chip" data-value="eFootball">eFootball</span>
+                    <span class="chip" data-value="Google Play">Google Play</span>
+                    <span class="chip" data-value="$">$</span>
+                    <span class="chip" data-value="خدمة">خدمة</span>
+                    <span class="chip" data-value="أخرى">أخرى</span>
+                </div>
             </div>
-        </div>
-
-        <!-- الفئة -->
-        <div class="card">
-            <h2>🏷️ الفئة</h2>
-            <div class="chips" id="categoryChips">
-                <span class="chip" data-value="Free Fire">Free Fire</span>
-                <span class="chip" data-value="PUBG">PUBG</span>
-                <span class="chip" data-value="eFootball">eFootball</span>
-                <span class="chip" data-value="Google Play">Google Play</span>
-                <span class="chip" data-value="حسابات">حسابات</span>
-                <span class="chip" data-value="خدمة">خدمة</span>
-                <span class="chip" data-value="أخرى">أخرى</span>
-            </div>
-        </div>
-
-        <!-- نوع الإعلان -->
-        <div class="card">
-            <h2>📢 نوع الإعلان</h2>
-            <div class="chips" id="adTypeChips">
-                <span class="chip" data-value="بيع">بيع</span>
-                <span class="chip" data-value="شراء">شراء</span>
-                <span class="chip" data-value="تبديل">تبديل</span>
-                <span class="chip" data-value="مجاناً">مجاناً</span>
-            </div>
-        </div>
-
-        <!-- السعر -->
-        <div class="card" id="priceCard" style="display:none;">
-            <h2>💰 السعر بـ (دينار جزائري)</h2>
             <div class="form-group">
-                <input type="number" id="price" placeholder="مثال: 2500" step="0.01">
+                <label>نوع الإعلان</label>
+                <div class="chips-row" id="editAdTypeChips">
+                    <span class="chip" data-value="بيع">بيع</span>
+                    <span class="chip" data-value="شراء">شراء</span>
+                    <span class="chip" data-value="تبديل">تبديل</span>
+                    <span class="chip" data-value="مجاناً">مجاناً</span>
+                </div>
             </div>
-        </div>
-
-        <!-- الصورة -->
-        <div class="card">
-            <h2>🖼️ رابط الصورة</h2>
             <div class="form-group">
-                <input type="text" id="imageUrl" placeholder="https://..." dir="ltr">
-                <div style="font-size:0.8rem;color:#94a3b8;margin-top:0.3rem;">ارفع صورتك على imgur.com أو أي خدمة استضافة صور</div>
+                <label>السعر (د.ج)</label>
+                <input type="number" id="editPrice" step="0.01">
             </div>
-        </div>
-
-        <!-- معاينة JSON -->
-        <div class="card">
-            <h2>📋 كود JSON المُولد</h2>
-            <div class="preview-box" id="jsonPreview">{
-  "id": 1,
-  "title": "",
-  "category": "",
-  "adType": "",
-  "price": null,
-  "image": "",
-  "description": ""
-}</div>
-        </div>
-
-        <!-- أزرار -->
-        <div class="buttons">
-            <button class="btn btn-outline" onclick="copyJSON()">📋 نسخ الكود</button>
-            <button class="btn btn-primary" onclick="openGitHubEditor()">✏️ فتح products.json على GitHub</button>
-        </div>
-
-        <div class="link-box">
-            <p>🔗 رابط ملف المنتجات على GitHub:</p>
-            <a id="githubLink" href="#" target="_blank">استبدل هذا برابط مستودعك</a>
+            <div class="form-group">
+                <label>رابط الصورة</label>
+                <input type="text" id="editImageUrl" dir="ltr">
+            </div>
+            <div class="form-group">
+                <label>الوصف</label>
+                <textarea id="editDescription" maxlength="300"></textarea>
+            </div>
+            <div class="form-group">
+                <label>الحالة</label>
+                <select id="editStatus">
+                    <option value="active">نشط</option>
+                    <option value="inactive">غير نشط</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeEditModal()">إلغاء</button>
+                <button class="btn btn-neon" onclick="saveEdit()">💾 حفظ التعديلات</button>
+            </div>
         </div>
     </div>
 
+    <!-- حاوية التوست -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        // المتغيرات
-        let selectedCategory = '';
-        let selectedAdType = '';
+        // ============ المتغيرات العامة ============
+        let products = [];
+        let storeOpen = true;
+        const GITHUB_API = ''; // اتركه فارغاً للموقع الثابت
 
-        // عداد الحروف للاسم
-        document.getElementById('title').addEventListener('input', function() {
-            const remaining = 20 - this.value.length;
-            const counter = document.getElementById('titleCount');
-            counter.textContent = `${remaining} حرف متبقي`;
-            counter.className = 'char-count';
-            if (remaining <= 5) counter.classList.add('warning');
-            updatePreview();
-        });
+        // ============ تحميل البيانات ============
+        async function loadProducts() {
+            try {
+                const res = await fetch('products.json?' + Date.now());
+                products = await res.json();
+                updateStats();
+                renderProductsTable();
+            } catch(e) {
+                products = [];
+                updateStats();
+                renderProductsTable();
+            }
+        }
 
-        // عداد الحروف للوصف
-        document.getElementById('description').addEventListener('input', function() {
-            const remaining = 300 - this.value.length;
-            const counter = document.getElementById('descCount');
-            counter.textContent = `${remaining} حرف متبقي`;
-            counter.className = 'char-count';
-            if (remaining <= 20) counter.classList.add('warning');
-            updatePreview();
-        });
+        function saveProductsToFile() {
+            const jsonStr = JSON.stringify(products, null, 2);
+            const blob = new Blob([jsonStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'products.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('💡 تم تحميل الملف! ارفعه يدوياً إلى GitHub', 'info');
+        }
 
-        // اختيار الفئة
-        document.getElementById('categoryChips').addEventListener('click', function(e) {
-            if (e.target.classList.contains('chip')) {
-                this.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+        // ============ تحديث الإحصائيات ============
+        function updateStats() {
+            const total = products.length;
+            const active = products.filter(p => p.status !== 'inactive').length;
+            document.getElementById('totalProducts').textContent = total;
+            document.getElementById('activeProducts').textContent = active;
+            document.getElementById('dashTotal').textContent = total;
+            document.getElementById('dashActive').textContent = active;
+        }
+
+        // ============ عرض المنتجات في الجدول ============
+        function renderProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);">لا توجد منتجات بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = products.map((p, index) => `
+                <tr>
+                    <td><img src="${p.image || 'https://placehold.co/50x50/111d11/10b981?text=⛔'}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;" onerror="this.src='https://placehold.co/50x50/111d11/10b981?text=⛔'"></td>
+                    <td><strong>${p.title}</strong></td>
+                    <td>${p.category}</td>
+                    <td>${p.adType}</td>
+                    <td>${p.adType === 'مجاناً' || p.adType === 'تبديل' ? '—' : (p.price?.toLocaleString() || 0) + ' د.ج'}</td>
+                    <td><span class="status-badge ${p.status === 'inactive' ? 'status-inactive' : 'status-active'}">${p.status === 'inactive' ? 'غير نشط' : 'نشط'}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-outline btn-sm" onclick="openEditModal(${index})">✏️</button>
+                            <button class="btn btn-outline btn-sm" onclick="toggleProductStatus(${index})" style="color:${p.status==='inactive'?'var(--green-neon)':'var(--warning)'};">${p.status==='inactive'?'▶️':'⏸️'}</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${index})">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ============ إضافة منتج ============
+        let addCategory = '', addAdType = '';
+
+        document.getElementById('addCategoryChips').addEventListener('click', function(e) {
+            if(e.target.classList.contains('chip')) {
+                this.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
                 e.target.classList.add('selected');
-                selectedCategory = e.target.dataset.value;
-                updatePreview();
+                addCategory = e.target.dataset.value;
             }
         });
 
-        // اختيار نوع الإعلان
-        document.getElementById('adTypeChips').addEventListener('click', function(e) {
-            if (e.target.classList.contains('chip')) {
-                this.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+        document.getElementById('addAdTypeChips').addEventListener('click', function(e) {
+            if(e.target.classList.contains('chip')) {
+                this.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
                 e.target.classList.add('selected');
-                selectedAdType = e.target.dataset.value;
-                
-                const priceCard = document.getElementById('priceCard');
-                if (selectedAdType === 'بيع' || selectedAdType === 'شراء') {
-                    priceCard.style.display = 'block';
-                } else {
-                    priceCard.style.display = 'none';
-                    document.getElementById('price').value = '';
-                }
-                updatePreview();
+                addAdType = e.target.dataset.value;
+                const pg = document.getElementById('addPriceGroup');
+                pg.style.display = (addAdType === 'بيع' || addAdType === 'شراء') ? 'block' : 'none';
+                if(addAdType !== 'بيع' && addAdType !== 'شراء') document.getElementById('addPrice').value = '';
             }
         });
 
-        // تحديث السعر
-        document.getElementById('price').addEventListener('input', updatePreview);
-        document.getElementById('imageUrl').addEventListener('input', updatePreview);
+        document.getElementById('addTitle').addEventListener('input', function() {
+            document.getElementById('addTitleCount').textContent = (20 - this.value.length) + ' متبقي';
+        });
+        document.getElementById('addDescription').addEventListener('input', function() {
+            document.getElementById('addDescCount').textContent = (300 - this.value.length) + ' متبقي';
+        });
 
-        // تحديث معاينة JSON
-        function updatePreview() {
-            const product = {
+        function addProduct() {
+            const title = document.getElementById('addTitle').value.trim();
+            if(!title) return showToast('❌ أدخل اسم المنتج', 'error');
+            if(!addCategory) return showToast('❌ اختر الفئة', 'error');
+            if(!addAdType) return showToast('❌ اختر نوع الإعلان', 'error');
+
+            const newProduct = {
                 id: Date.now(),
-                title: document.getElementById('title').value || '',
-                category: selectedCategory || '',
-                adType: selectedAdType || '',
-                price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : null,
-                image: document.getElementById('imageUrl').value || '',
-                description: document.getElementById('description').value || ''
+                title: title,
+                category: addCategory,
+                adType: addAdType,
+                price: (addAdType === 'بيع' || addAdType === 'شراء') ? (parseFloat(document.getElementById('addPrice').value) || 0) : null,
+                image: document.getElementById('addImageUrl').value.trim(),
+                description: document.getElementById('addDescription').value.trim(),
+                status: 'active'
             };
 
-            document.getElementById('jsonPreview').textContent = JSON.stringify(product, null, 2);
-        }
-
-        // نسخ JSON
-        function copyJSON() {
-            const jsonText = document.getElementById('jsonPreview').textContent;
+            products.push(newProduct);
+            saveProductsToFile();
+            updateStats();
+            renderProductsTable();
             
-            // التحقق من البيانات
-            const title = document.getElementById('title').value.trim();
-            if (!title) {
-                showToast('❌ أدخل اسم المنتج أولاً', true);
-                return;
-            }
-            if (!selectedCategory) {
-                showToast('❌ اختر الفئة', true);
-                return;
-            }
-            if (!selectedAdType) {
-                showToast('❌ اختر نوع الإعلان', true);
-                return;
-            }
+            // إعادة تعيين النموذج
+            document.getElementById('addTitle').value = '';
+            document.getElementById('addDescription').value = '';
+            document.getElementById('addPrice').value = '';
+            document.getElementById('addImageUrl').value = '';
+            document.querySelectorAll('#addCategoryChips .chip, #addAdTypeChips .chip').forEach(c=>c.classList.remove('selected'));
+            document.getElementById('addPriceGroup').style.display = 'none';
+            addCategory = ''; addAdType = '';
+            document.getElementById('addTitleCount').textContent = '20 متبقي';
+            document.getElementById('addDescCount').textContent = '300 متبقي';
 
-            navigator.clipboard.writeText(jsonText).then(() => {
-                showToast('✅ تم نسخ الكود! الآن الصقه في ملف products.json', false);
+            showToast('✅ تمت إضافة المنتج! حمّل الملف إلى GitHub', 'success');
+        }
+
+        // ============ تعديل منتج ============
+        let editIndex = -1;
+
+        function openEditModal(index) {
+            editIndex = index;
+            const p = products[index];
+            document.getElementById('editId').value = p.id;
+            document.getElementById('editTitle').value = p.title;
+            document.getElementById('editPrice').value = p.price || '';
+            document.getElementById('editImageUrl').value = p.image || '';
+            document.getElementById('editDescription').value = p.description || '';
+            document.getElementById('editStatus').value = p.status || 'active';
+
+            document.querySelectorAll('#editCategoryChips .chip').forEach(c=>{
+                c.classList.toggle('selected', c.dataset.value === p.category);
             });
+            document.querySelectorAll('#editAdTypeChips .chip').forEach(c=>{
+                c.classList.toggle('selected', c.dataset.value === p.adType);
+            });
+
+            document.getElementById('editModal').classList.add('show');
         }
 
-        // فتح GitHub
-        function openGitHubEditor() {
-            const githubUrl = document.getElementById('githubLink').href;
-            if (githubUrl === '#') {
-                showToast('⚠️ حدث الرابط في الأسفل أولاً', true);
-                return;
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            editIndex = -1;
+        }
+
+        function saveEdit() {
+            if(editIndex < 0) return;
+            const p = products[editIndex];
+            p.title = document.getElementById('editTitle').value.trim();
+            p.category = document.querySelector('#editCategoryChips .chip.selected')?.dataset.value || p.category;
+            p.adType = document.querySelector('#editAdTypeChips .chip.selected')?.dataset.value || p.adType;
+            p.price = parseFloat(document.getElementById('editPrice').value) || null;
+            p.image = document.getElementById('editImageUrl').value.trim();
+            p.description = document.getElementById('editDescription').value.trim();
+            p.status = document.getElementById('editStatus').value;
+
+            saveProductsToFile();
+            updateStats();
+            renderProductsTable();
+            closeEditModal();
+            showToast('✅ تم حفظ التعديلات!', 'success');
+        }
+
+        // ============ حذف منتج ============
+        function deleteProduct(index) {
+            if(!confirm('متأكد من حذف "' + products[index].title + '" ؟')) return;
+            products.splice(index, 1);
+            saveProductsToFile();
+            updateStats();
+            renderProductsTable();
+            showToast('🗑️ تم حذف المنتج', 'info');
+        }
+
+        // ============ تفعيل/تعطيل منتج ============
+        function toggleProductStatus(index) {
+            products[index].status = products[index].status === 'inactive' ? 'active' : 'inactive';
+            saveProductsToFile();
+            updateStats();
+            renderProductsTable();
+            showToast(products[index].status === 'active' ? '▶️ المنتج نشط الآن' : '⏸️ المنتج غير نشط', 'info');
+        }
+
+        // ============ حذف الكل ============
+        function deleteAllProducts() {
+            if(!confirm('⚠️ متأكد من حذف جميع المنتجات؟ هذا لا يمكن التراجع عنه!')) return;
+            if(!confirm('تأكيد نهائي: سيتم حذف كل شيء!')) return;
+            products = [];
+            saveProductsToFile();
+            updateStats();
+            renderProductsTable();
+            showToast('🗑️ تم حذف جميع المنتجات', 'error');
+        }
+
+        // ============ تصدير JSON ============
+        function exportJSON() {
+            saveProductsToFile();
+        }
+
+        // ============ إيقاف/تشغيل المتجر ============
+        function toggleStore() {
+            storeOpen = !storeOpen;
+            const toggle = document.getElementById('storeToggle');
+            const label = document.getElementById('storeStatusLabel');
+            const text = document.getElementById('storeStatusText');
+            
+            if(storeOpen) {
+                toggle.classList.add('active');
+                label.innerHTML = 'مفتوح 🟢';
+                label.style.color = 'var(--green-glow)';
+                text.textContent = 'مفتوح 🟢';
+                text.style.color = 'var(--green-glow)';
+            } else {
+                toggle.classList.remove('active');
+                label.innerHTML = 'مغلق 🔴';
+                label.style.color = 'var(--danger-glow)';
+                text.textContent = 'مغلق 🔴';
+                text.style.color = 'var(--danger-glow)';
             }
-            window.open(githubUrl, '_blank');
+            localStorage.setItem('bazarak_store_open', storeOpen);
+            showToast(storeOpen ? '🟢 المتجر مفتوح للزوار' : '🔴 المتجر مغلق للصيانة', 'info');
         }
 
-        // رسالة تنبيه
-        function showToast(message, isError) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
+        // ============ التنقل بين الصفحات ============
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+            const buttons = document.querySelectorAll('.sidebar-nav button');
+            const map = { dashboard:0, addProduct:1, productsList:2, settings:3 };
+            if(map[pageName] !== undefined) buttons[map[pageName]].classList.add('active');
 
+            if(pageName === 'productsList' || pageName === 'dashboard') {
+                loadProducts();
+            }
+        }
+
+        // ============ التوست ============
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = 'toast' + (isError ? ' error-toast' : '');
+            toast.className = 'toast toast-' + type;
             toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
         }
 
-        // ضبط رابط GitHub
-        document.getElementById('githubLink').addEventListener('click', function(e) {
-            if (this.href === '#') {
-                e.preventDefault();
-                const repo = prompt('أدخل رابط مستودع GitHub الخاص بك:\nمثال: https://github.com/username/repo');
-                if (repo) {
-                    const editUrl = repo.replace('github.com', 'github.com') + '/edit/main/products.json';
-                    this.href = editUrl;
-                    this.textContent = editUrl;
-                }
-            }
+        // ============ بدء التشغيل ============
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if(e.target === this) closeEditModal();
         });
+
+        // تحميل حالة المتجر
+        storeOpen = localStorage.getItem('bazarak_store_open') !== 'false';
+        if(!storeOpen) {
+            document.getElementById('storeToggle').classList.remove('active');
+            document.getElementById('storeStatusLabel').innerHTML = 'مغلق 🔴';
+            document.getElementById('storeStatusLabel').style.color = 'var(--danger-glow)';
+            document.getElementById('storeStatusText').textContent = 'مغلق 🔴';
+            document.getElementById('storeStatusText').style.color = 'var(--danger-glow)';
+        }
+
+        loadProducts();
     </script>
 </body>
 </html>
