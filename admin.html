@@ -157,6 +157,7 @@
     </aside>
 
     <main class="main-content">
+        <!-- لوحة التحكم -->
         <div class="page active" id="page-dashboard">
             <div class="dashboard-header"><h1>📊 لوحة التحكم</h1></div>
             <div class="card">
@@ -166,6 +167,7 @@
             </div>
         </div>
 
+        <!-- إضافة منتج -->
         <div class="page" id="page-addProduct">
             <div class="dashboard-header"><h1>➕ إضافة منتج جديد</h1></div>
             <div class="card">
@@ -218,7 +220,7 @@
                             <p id="uploadPlaceholder">📷 اضغط لاختيار صورة</p>
                             <input type="file" id="addImageFile" accept="image/*" style="display:none;">
                         </div>
-                        <div class="hint">الصورة تُرفع مباشرة إلى مجلد images/ في المستودع</div>
+                        <div class="hint">الصورة تُرفع مباشرة إلى المستودع</div>
                     </div>
                     <div class="form-group full">
                         <label>📄 الوصف</label>
@@ -232,6 +234,7 @@
             </div>
         </div>
 
+        <!-- قائمة المنتجات -->
         <div class="page" id="page-productsList">
             <div class="dashboard-header">
                 <h1>📦 قائمة المنتجات</h1>
@@ -250,6 +253,7 @@
             </div>
         </div>
 
+        <!-- الإعدادات -->
         <div class="page" id="page-settings">
             <div class="dashboard-header"><h1>⚙️ الإعدادات</h1></div>
             <div class="card">
@@ -280,6 +284,7 @@
     </main>
 </div>
 
+<!-- مودال التعديل -->
 <div class="modal-overlay" id="editModal">
     <div class="modal">
         <h2>✏️ تعديل المنتج</h2>
@@ -434,28 +439,68 @@ async function syncConfigFile() {
     return await syncFile('config.json', JSON.stringify({ storeOpen }), 'تحديث حالة المتجر');
 }
 
-// ========== رفع الصورة ==========
+// ========== رفع الصورة (مصححة) ==========
 async function uploadImage(file) {
     const c = getConfig();
     if (!c.token) throw new Error('إعدادات GitHub غير مكتملة');
+
     const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = `images/${Date.now()}_${cleanName}`;
+    // نرفع الصورة مباشرة في جذر المستودع بدون مجلدات لتجنب مشكلة المسارات
+    const path = `img_${Date.now()}_${cleanName}`;
+
     const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => { resolve(reader.result.split(',')[1]); };
         reader.onerror = () => reject(new Error('فشل قراءة الملف'));
         reader.readAsDataURL(file);
     });
+
     const api = `https://api.github.com/repos/${c.username}/${c.repo}/contents/${path}`;
+
+    const body = {
+        message: `رفع صورة ${path}`,
+        content: base64,
+        branch: 'main'
+    };
+
     const res = await fetch(api, {
         method: 'PUT',
-        headers: { 'Authorization': `token ${c.token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `رفع ${path}`, content: base64, branch: 'main' })
+        headers: {
+            'Authorization': `token ${c.token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify(body)
     });
+
     if (!res.ok) {
         const err = await res.json();
+        console.error('خطأ رفع الصورة:', err);
+        
+        // إذا كان الملف موجوداً مسبقاً، نضيف رقم عشوائي
+        if (err.message && err.message.includes('already exists')) {
+            const newPath = `img_${Date.now()}_${Math.random().toString(36).substr(2,8)}_${cleanName}`;
+            const newApi = `https://api.github.com/repos/${c.username}/${c.repo}/contents/${newPath}`;
+            const newBody = { message: `رفع صورة ${newPath}`, content: base64, branch: 'main' };
+            const retryRes = await fetch(newApi, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${c.token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(newBody)
+            });
+            if (!retryRes.ok) {
+                const retryErr = await retryRes.json();
+                throw new Error(retryErr.message || 'فشل رفع الصورة');
+            }
+            return newPath;
+        }
+        
         throw new Error(err.message || 'فشل رفع الصورة');
     }
+
     return path;
 }
 
@@ -526,37 +571,52 @@ async function addProduct() {
     if (!title) return showToast('❌ أدخل اسم المنتج', 'error');
     if (!addCategory) return showToast('❌ اختر الفئة', 'error');
     if (!addAdType) return showToast('❌ اختر نوع الإعلان', 'error');
+    
     const btn = document.getElementById('addProductBtn');
     btn.disabled = true;
     btn.textContent = '⏳ جاري الرفع...';
+    
     let imagePath = '';
     if (selectedImageFile) {
-        try { imagePath = await uploadImage(selectedImageFile); }
-        catch (e) {
+        try {
+            imagePath = await uploadImage(selectedImageFile);
+            showToast('✅ تم رفع الصورة بنجاح', 'success');
+        } catch (e) {
             showToast('❌ فشل رفع الصورة: ' + e.message, 'error');
             btn.disabled = false;
             btn.textContent = '🚀 إضافة المنتج';
             return;
         }
     }
+    
     const np = {
-        id: Date.now(), title, category: addCategory, adType: addAdType,
+        id: Date.now(),
+        title,
+        category: addCategory,
+        adType: addAdType,
         paymentMethods: (addAdType === 'بيع' || addAdType === 'شراء') ? addPaymentMethods : [],
         priceDA: (addAdType === 'بيع' || addAdType === 'شراء') ? (parseFloat(document.getElementById('addPriceDA').value) || null) : null,
         priceUSD: (addAdType === 'بيع' || addAdType === 'شراء') ? (parseFloat(document.getElementById('addPriceUSD').value) || null) : null,
-        image: imagePath, description: document.getElementById('addDescription').value.trim(), status: 'active'
+        image: imagePath,
+        description: document.getElementById('addDescription').value.trim(),
+        status: 'active'
     };
+    
     products.push(np);
     if (await syncProducts()) {
-        updateStats(); renderTable(); resetAddForm();
+        updateStats();
+        renderTable();
+        resetAddForm();
         showToast('✅ تم النشر بنجاح', 'success');
     } else {
         products.pop();
         showToast('❌ فشلت المزامنة', 'error');
     }
+    
     btn.disabled = false;
     btn.textContent = '🚀 إضافة المنتج';
 }
+
 function resetAddForm() {
     document.getElementById('addTitle').value = '';
     document.getElementById('addDescription').value = '';
@@ -580,6 +640,7 @@ document.getElementById('addProductBtn').addEventListener('click', addProduct);
 // ========== تعديل ==========
 let editIndex = -1;
 const editModal = document.getElementById('editModal');
+
 function openEdit(index) {
     editIndex = index;
     const p = products[index];
@@ -595,6 +656,7 @@ function openEdit(index) {
     renderChips('editPaymentMethodChips', ['فليكسي', 'بريدي موب', 'CCP', '$', 'نقداً'], p.paymentMethods || []);
     editModal.classList.add('show');
 }
+
 function renderChips(id, values, selected) {
     const cnt = document.getElementById(id);
     cnt.innerHTML = values.map(v => `<span class="chip${selected.includes(v) ? ' selected' : ''}" data-value="${v}">${v}</span>`).join('');
@@ -608,7 +670,11 @@ function renderChips(id, values, selected) {
         }
     };
 }
-function getSelected(id) { return Array.from(document.querySelectorAll(`#${id} .chip.selected`)).map(c => c.dataset.value); }
+
+function getSelected(id) {
+    return Array.from(document.querySelectorAll(`#${id} .chip.selected`)).map(c => c.dataset.value);
+}
+
 async function saveEdit() {
     const p = products[editIndex];
     p.title = document.getElementById('editTitle').value.trim();
@@ -620,8 +686,15 @@ async function saveEdit() {
     p.image = document.getElementById('editImageUrl').value.trim();
     p.description = document.getElementById('editDescription').value.trim();
     p.status = document.getElementById('editStatus').value;
-    if (await syncProducts()) { updateStats(); renderTable(); closeEdit(); showToast('✅ تم الحفظ', 'success'); }
+    
+    if (await syncProducts()) {
+        updateStats();
+        renderTable();
+        closeEdit();
+        showToast('✅ تم الحفظ', 'success');
+    }
 }
+
 function closeEdit() { editModal.classList.remove('show'); }
 document.getElementById('cancelEditBtn').addEventListener('click', closeEdit);
 document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
@@ -633,6 +706,7 @@ async function deleteProduct(index) {
     products.splice(index, 1);
     if (await syncProducts()) { updateStats(); renderTable(); showToast('🗑️ تم الحذف', 'info'); }
 }
+
 async function toggleStatus(index) {
     products[index].status = products[index].status === 'inactive' ? 'active' : 'inactive';
     if (await syncProducts()) { updateStats(); renderTable(); }
@@ -698,6 +772,7 @@ const saved = getConfig();
 if (saved.username) document.getElementById('githubUsername').value = saved.username;
 if (saved.repo) document.getElementById('githubRepo').value = saved.repo;
 if (saved.token) document.getElementById('githubToken').value = saved.token;
+
 storeOpen = localStorage.getItem('storeOpen') !== 'false';
 if (!storeOpen) {
     document.getElementById('storeToggle').classList.remove('active');
@@ -706,6 +781,7 @@ if (!storeOpen) {
     document.getElementById('storeStatusText').textContent = '🔴 مغلق';
     document.getElementById('storeStatusText').style.color = 'var(--danger-glow)';
 }
+
 loadProducts();
 </script>
 </body>
