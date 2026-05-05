@@ -17,49 +17,96 @@
             background: var(--bg-dark); color: var(--text-primary); min-height: 100vh;
             background-image: radial-gradient(ellipse at top, rgba(16,185,129,0.04) 0%, transparent 60%);
         }
-        header { background: linear-gradient(180deg, #0d1a0d, #0a0f0a); border-bottom:2px solid var(--border); padding:2rem; text-align:center; }
-        .store-logo {
-            font-size:3rem; font-weight:900;
-            background: linear-gradient(135deg, var(--green-neon), var(--green-glow), var(--blue-neon));
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:1px;
+        header {
+            background: linear-gradient(180deg, #0d1a0d, #0a0f0a);
+            border-bottom: 2px solid var(--border); padding: 2rem; text-align: center;
         }
+        .store-logo {
+            font-size: 3rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--green-neon), var(--green-glow), var(--blue-neon));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;
+        }
+        .search-box { max-width: 500px; margin: 1.5rem auto 0; }
         .search-box input {
-            width:100%; max-width:500px; margin:1.5rem auto 0; padding:14px 22px;
-            border:2px solid var(--border); border-radius:30px; background:var(--bg-card);
-            color:var(--text-primary); font-family:inherit; outline:none;
+            width: 100%; padding: 14px 22px; border: 2px solid var(--border);
+            border-radius: 30px; background: var(--bg-card); color: var(--text-primary);
+            font-family: inherit; outline: none; transition: all 0.3s;
         }
         .search-box input:focus { border-color: var(--green-glow); }
-        .container { display:flex; gap:2rem; max-width:1350px; margin:2rem auto; padding:0 1.5rem; }
-        .sidebar { width:280px; }
-        .filter-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.2rem; }
-        .filter-card h3 { color:var(--green-neon); margin-bottom:1rem; }
-        .filter-item { display:block; padding:0.5rem 0.9rem; border-radius:10px; cursor:pointer; color:var(--text-dim); margin:0.2rem 0; transition:0.2s; }
-        .filter-item:hover, .filter-item.active { background:rgba(16,185,129,0.12); color:var(--green-neon); font-weight:700; }
-        .price-inputs { display:flex; gap:0.5rem; align-items:center; }
-        .price-inputs input { width:100%; padding:0.6rem; background:#0a0f0a; border:1px solid var(--border); border-radius:8px; color:var(--text-primary); }
-        .btn { padding:0.6rem 1rem; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit; }
-        .btn-neon { background:linear-gradient(135deg,#059669,#10b981); color:white; }
-        .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text-dim); }
-        .products-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
-        .product-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:0.3s; }
-        .product-card:hover { border-color:var(--green-neon); transform:translateY(-4px); }
-        .product-card img { width:100%; height:210px; object-fit:cover; }
-        .product-info { padding:1.2rem; }
-        .badge { padding:0.2rem 0.7rem; border-radius:20px; font-size:0.7rem; font-weight:700; display:inline-block; margin-left:0.3rem; }
-        .badge-category { background:rgba(16,185,129,0.15); color:var(--green-glow); }
-        .badge-adtype { background:rgba(56,189,248,0.12); color:var(--blue-neon); }
-        .payment-tag { background:rgba(16,185,129,0.1); color:var(--green-glow); padding:0.2rem 0.5rem; border-radius:12px; font-size:0.7rem; }
-        .product-price { font-size:1.4rem; font-weight:800; color:var(--green-glow); }
-        .maintenance { text-align:center; padding:4rem; color:var(--green-glow); font-size:1.5rem; }
-        @media (max-width:768px) { .container { flex-direction:column; } .sidebar { width:100%; } }
+        .container { display: flex; gap: 2rem; max-width: 1350px; margin: 2rem auto; padding: 0 1.5rem; }
+        .sidebar { width: 280px; flex-shrink: 0; }
+        .filter-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem;
+        }
+        .filter-card h3 { color: var(--green-neon); margin-bottom: 1rem; }
+        .filter-item {
+            display: block; padding: 0.5rem 0.9rem; border-radius: 10px; cursor: pointer;
+            color: var(--text-dim); margin: 0.2rem 0; transition: all 0.2s;
+        }
+        .filter-item:hover, .filter-item.active {
+            background: rgba(16,185,129,0.12); color: var(--green-neon); font-weight: 700;
+        }
+        .price-inputs { display: flex; gap: 0.5rem; align-items: center; }
+        .price-inputs input {
+            width: 100%; padding: 0.6rem; background: #0a0f0a;
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);
+        }
+        .btn {
+            padding: 0.6rem 1rem; border: none; border-radius: 8px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all 0.3s;
+        }
+        .btn-neon { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 0 20px rgba(16,185,129,0.25); }
+        .btn-neon:hover { box-shadow: 0 0 35px rgba(16,185,129,0.45); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+        .btn-outline:hover { border-color: var(--green-neon); color: var(--green-neon); }
+        .main-content { flex: 1; }
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+        }
+        .product-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .product-card:hover {
+            border-color: var(--green-mid); transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(16,185,129,0.12);
+        }
+        .product-card img { width: 100%; height: 210px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .product-info { padding: 1.2rem; }
+        .badges { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+        .badge {
+            padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+        }
+        .badge-category { background: rgba(16,185,129,0.15); color: var(--green-glow); }
+        .badge-adtype { background: rgba(56,189,248,0.12); color: var(--blue-neon); }
+        .badge-swap { background: rgba(167,139,250,0.15); color: var(--purple-neon); }
+        .product-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .payment-methods { display: flex; gap: 0.3rem; flex-wrap: wrap; margin: 0.5rem 0; }
+        .payment-tag {
+            font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 12px;
+            background: rgba(16,185,129,0.1); color: var(--green-glow);
+        }
+        .product-price { font-size: 1.4rem; font-weight: 800; color: var(--green-glow); }
+        .product-price.swap { color: var(--purple-neon); }
+        .product-desc { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.4rem; }
+        .no-products { text-align: center; padding: 4rem 2rem; color: var(--text-dim); }
+        .maintenance-msg { text-align: center; padding: 4rem; color: var(--green-glow); font-size: 1.5rem; }
+        footer { text-align: center; padding: 2rem; color: #3a4a3a; font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { width: 100%; } }
     </style>
 </head>
 <body>
     <header>
         <div class="store-logo">بازارك</div>
-        <div class="search-box"><input type="text" id="searchInput" placeholder="🔍 ابحث في بازارك..."></div>
+        <p style="color:var(--text-dim);margin-top:0.5rem;">متجرك الإلكتروني لكل شيء</p>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث في بازارك...">
+        </div>
     </header>
     <div id="app"></div>
+    <footer>© 2026 بازارك - جميع الحقوق محفوظة</footer>
 
     <script>
         let products = [], storeOpen = true;
@@ -67,77 +114,89 @@
 
         async function loadConfig() {
             try {
-                const res = await fetch('config.json?t='+Date.now(), { cache:'no-store' });
+                const res = await fetch('config.json?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const config = await res.json();
                     storeOpen = config.storeOpen !== false;
                 }
-            } catch { storeOpen = true; }
+            } catch (e) { storeOpen = true; }
         }
 
         async function loadProducts() {
             try {
-                const res = await fetch(`products.json?t=${Date.now()}`, { cache:'no-store' });
+                const res = await fetch(`products.json?t=${Date.now()}`, { cache: 'no-store' });
                 products = await res.json();
                 products = products.filter(p => p.status !== 'inactive');
-            } catch { products = []; }
+            } catch (e) { products = []; }
         }
 
         function renderApp() {
             if (!storeOpen) {
-                document.getElementById('app').innerHTML = '<div class="maintenance">🔴 المتجر مغلق للصيانة حالياً</div>';
+                document.getElementById('app').innerHTML = '<div class="maintenance-msg">🔴 المتجر مغلق للصيانة حالياً</div>';
                 return;
             }
-            // الفلاتر والعرض
             const cats = [...new Set(products.map(p => p.category))];
-            let html = `
-            <div class="container">
-                <aside class="sidebar">
-                    <div class="filter-card">
-                        <h3>📂 الفئات</h3>
-                        <div id="categoryFilters"><span class="filter-item active" data-value="الكل">الكل</span>${cats.map(c => `<span class="filter-item" data-value="${c}">${c}</span>`).join('')}</div>
-                    </div>
-                    <div class="filter-card">
-                        <h3>🏷️ نوع الإعلان</h3>
-                        <div id="adTypeFilters"><span class="filter-item active" data-value="الكل">الكل</span><span class="filter-item" data-value="بيع">بيع</span><span class="filter-item" data-value="شراء">شراء</span><span class="filter-item" data-value="تبديل">تبديل</span></div>
-                    </div>
-                    <div class="filter-card">
-                        <h3>💰 السعر</h3>
-                        <div class="price-inputs"><input type="number" id="minPrice" placeholder="من"><span>-</span><input type="number" id="maxPrice" placeholder="إلى"></div>
-                        <div class="price-inputs" style="margin-top:0.5rem;"><button class="btn btn-neon" id="applyFilterBtn">تصفية</button><button class="btn btn-outline" id="resetFilterBtn">مسح</button></div>
-                    </div>
-                </aside>
-                <main class="main-content" id="productsContainer"></main>
-            </div>`;
-            document.getElementById('app').innerHTML = html;
+            document.getElementById('app').innerHTML = `
+                <div class="container">
+                    <aside class="sidebar">
+                        <div class="filter-card">
+                            <h3>📂 الفئات</h3>
+                            <div id="categoryFilters">
+                                <span class="filter-item active" data-value="الكل">الكل</span>
+                                ${cats.map(c => `<span class="filter-item" data-value="${c}">${c}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <h3>🏷️ نوع الإعلان</h3>
+                            <div id="adTypeFilters">
+                                <span class="filter-item active" data-value="الكل">الكل</span>
+                                <span class="filter-item" data-value="بيع">بيع</span>
+                                <span class="filter-item" data-value="شراء">شراء</span>
+                                <span class="filter-item" data-value="تبديل">تبديل</span>
+                            </div>
+                        </div>
+                        <div class="filter-card">
+                            <h3>💰 السعر</h3>
+                            <div class="price-inputs">
+                                <input type="number" id="minPrice" placeholder="من">
+                                <span style="color:var(--text-dim);">—</span>
+                                <input type="number" id="maxPrice" placeholder="إلى">
+                            </div>
+                            <div class="price-inputs" style="margin-top:0.6rem;">
+                                <button class="btn btn-neon" id="applyFilterBtn">تصفية</button>
+                                <button class="btn btn-outline" id="resetFilterBtn">مسح</button>
+                            </div>
+                        </div>
+                    </aside>
+                    <main class="main-content" id="productsContainer"></main>
+                </div>
+            `;
             attachEvents();
             applyFilters();
         }
 
         function attachEvents() {
             document.getElementById('categoryFilters').addEventListener('click', e => {
-                if (e.target.classList.contains('filter-item')) {
-                    document.querySelectorAll('#categoryFilters .filter-item').forEach(i=>i.classList.remove('active'));
-                    e.target.classList.add('active');
-                    activeCategory = e.target.dataset.value;
-                    applyFilters();
-                }
+                if (!e.target.classList.contains('filter-item')) return;
+                document.querySelectorAll('#categoryFilters .filter-item').forEach(i => i.classList.remove('active'));
+                e.target.classList.add('active');
+                activeCategory = e.target.dataset.value;
+                applyFilters();
             });
             document.getElementById('adTypeFilters').addEventListener('click', e => {
-                if (e.target.classList.contains('filter-item')) {
-                    document.querySelectorAll('#adTypeFilters .filter-item').forEach(i=>i.classList.remove('active'));
-                    e.target.classList.add('active');
-                    activeAdType = e.target.dataset.value;
-                    applyFilters();
-                }
+                if (!e.target.classList.contains('filter-item')) return;
+                document.querySelectorAll('#adTypeFilters .filter-item').forEach(i => i.classList.remove('active'));
+                e.target.classList.add('active');
+                activeAdType = e.target.dataset.value;
+                applyFilters();
             });
             document.getElementById('applyFilterBtn').addEventListener('click', applyFilters);
             document.getElementById('resetFilterBtn').addEventListener('click', () => {
-                document.getElementById('minPrice').value='';
-                document.getElementById('maxPrice').value='';
-                document.getElementById('searchInput').value='';
-                activeCategory='الكل'; activeAdType='الكل';
-                document.querySelectorAll('.filter-item').forEach(i=>i.classList.remove('active'));
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.getElementById('searchInput').value = '';
+                activeCategory = 'الكل'; activeAdType = 'الكل';
+                document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
                 document.querySelector('#categoryFilters .filter-item').classList.add('active');
                 document.querySelector('#adTypeFilters .filter-item').classList.add('active');
                 applyFilters();
@@ -152,7 +211,7 @@
             const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
             if (activeCategory !== 'الكل') filtered = filtered.filter(p => p.category === activeCategory);
             if (activeAdType !== 'الكل') filtered = filtered.filter(p => p.adType === activeAdType);
-            if (search) filtered = filtered.filter(p => p.title.toLowerCase().includes(search) || p.description.includes(search));
+            if (search) filtered = filtered.filter(p => p.title.toLowerCase().includes(search) || p.description.includes(search) || p.category.includes(search));
             filtered = filtered.filter(p => {
                 if (p.adType === 'تبديل') return true;
                 return (p.priceDA || 0) >= min && (p.priceDA || 0) <= max;
@@ -163,22 +222,29 @@
         function renderProducts(list) {
             const container = document.getElementById('productsContainer');
             if (list.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:var(--text-dim);">لا توجد منتجات</p>';
+                container.innerHTML = '<p class="no-products">😕 لا توجد منتجات تطابق بحثك</p>';
                 return;
             }
             container.innerHTML = `<div class="products-grid">${list.map(p => {
-                const payTags = (p.paymentMethods||[]).map(m => `<span class="payment-tag">${m}</span>`).join('');
-                return `<div class="product-card">
-                    <img src="${p.image || ''}" alt="${p.title}" onerror="this.style.display='none'">
-                    <div class="product-info">
-                        <span class="badge badge-category">${p.category}</span>
-                        <span class="badge badge-adtype">${p.adType}</span>
-                        <h3>${p.title}</h3>
-                        ${payTags ? `<div style="margin:0.3rem 0;">${payTags}</div>` : ''}
-                        <p class="product-price">${p.adType==='تبديل' ? '🔄 للتبديل' : `${p.priceDA ? p.priceDA+' DA' : ''}${p.priceUSD ? ' | $'+p.priceUSD : ''}`}</p>
-                        ${p.description ? `<p style="color:var(--text-dim);font-size:0.8rem;">${p.description.substring(0,80)}</p>` : ''}
+                const payTags = (p.paymentMethods || []).map(m => `<span class="payment-tag">${m}</span>`).join('');
+                return `
+                    <div class="product-card">
+                        <img src="${p.image || ''}" alt="${p.title}" onerror="this.style.display='none'">
+                        <div class="product-info">
+                            <div class="badges">
+                                <span class="badge badge-category">${p.category}</span>
+                                <span class="badge badge-adtype">${p.adType}</span>
+                                ${p.adType === 'تبديل' ? '<span class="badge badge-swap">🔄 تبديل</span>' : ''}
+                            </div>
+                            <h3 class="product-title">${p.title}</h3>
+                            ${payTags ? `<div class="payment-methods">${payTags}</div>` : ''}
+                            <p class="product-price${p.adType === 'تبديل' ? ' swap' : ''}">
+                                ${p.adType === 'تبديل' ? '🔄 للتبديل' : `${p.priceDA ? p.priceDA.toLocaleString() + ' DA' : ''}${p.priceUSD ? ' | $' + p.priceUSD.toLocaleString() : ''}`}
+                            </p>
+                            ${p.description ? `<p class="product-desc">${p.description.substring(0, 80)}...</p>` : ''}
+                        </div>
                     </div>
-                </div>`;
+                `;
             }).join('')}</div>`;
         }
 
