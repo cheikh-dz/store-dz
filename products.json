@@ -12,20 +12,5 @@
     "image": "img_1777985097644_37d095ff-d47c-4c0b-bc90-ade05133e6b6.jpg",
     "description": "hjvfh,",
     "status": "active"
-  },
-  {
-    "id": 1777986697127,
-    "title": "ةةمحطة",
-    "category": "Google Play",
-    "adType": "شراء",
-    "paymentMethods": [
-      "CCP"
-    ],
-    "priceDA": 12.012,
-    "priceUSD": null,
-    "image": "img_1777986693234_37d095ff-d47c-4c0b-bc90-ade05133e6b6.jpg",
-    "description": "زك.:ومكطومكط",
-    "contactLink": "https://www.facebook.com/reel/1423344079282596",
-    "status": "active"
   }
 ]
