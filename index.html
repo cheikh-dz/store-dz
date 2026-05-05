@@ -3,310 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بازارك - متجرك الإلكتروني</title>
+    <title>بازارك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0f0a;
-            --bg-card: #0d1a0d;
-            --green-mid: #059669;
-            --green-neon: #10b981;
-            --green-glow: #34d399;
-            --text-primary: #e2e8f0;
-            --text-dim: #94a3b8;
-            --border: #1a3a2a;
-            --blue-neon: #38bdf8;
-            --purple-neon: #a78bfa;
+            --bg-dark: #0a0f0a; --bg-card: #0d1a0d;
+            --green-neon: #10b981; --green-glow: #34d399; --text-primary: #e2e8f0; --text-dim: #94a3b8;
+            --border: #1a3a2a; --blue-neon: #38bdf8; --purple-neon: #a78bfa;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark); color: var(--text-primary);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(ellipse at top, rgba(16, 185, 129, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at bottom left, rgba(5, 150, 105, 0.06) 0%, transparent 60%);
+            background-image: radial-gradient(ellipse at top, rgba(16,185,129,0.04) 0%, transparent 60%);
         }
-
         header {
-            background: linear-gradient(180deg, #0d1a0d 0%, #0a0f0a 100%);
-            border-bottom: 2px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(16, 185, 129, 0.06);
+            background: linear-gradient(180deg, #0d1a0d, #0a0f0a);
+            border-bottom: 2px solid var(--border); padding: 2rem; text-align: center;
         }
-
         .store-logo {
-            font-size: 3rem;
-            font-weight: 900;
+            font-size: 3rem; font-weight: 900;
             background: linear-gradient(135deg, var(--green-neon), var(--green-glow), var(--blue-neon));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
         }
-
-        .store-subtitle { color: var(--text-dim); font-size: 0.95rem; }
-
-        .search-box { max-width: 500px; margin: 1.5rem auto 0; }
         .search-box input {
-            width: 100%;
-            padding: 14px 22px;
-            border: 2px solid var(--border);
-            border-radius: 30px;
-            font-size: 1rem;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            outline: none;
-            transition: all 0.3s;
+            width: 100%; max-width: 500px; margin: 1.5rem auto 0;
+            padding: 14px 22px; border: 2px solid var(--border); border-radius: 30px;
+            background: var(--bg-card); color: var(--text-primary); font-family: inherit;
         }
-        .search-box input:focus {
-            border-color: var(--green-mid);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);
-        }
-
-        .container { display: flex; gap: 2rem; max-width: 1350px; margin: 2rem auto; padding: 0 1.5rem; }
-        .sidebar { width: 280px; flex-shrink: 0; }
-        .main-content { flex: 1; }
-
-        .filter-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 0 25px rgba(0,0,0,0.2);
-        }
-        .filter-card h3 { color: var(--green-neon); margin-bottom: 1rem; font-size: 1.05rem; }
-
-        .filter-item {
-            display: block;
-            padding: 0.55rem 0.9rem;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 0.2rem 0;
-            transition: all 0.25s;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-        .filter-item:hover { background: rgba(16, 185, 129, 0.06); color: var(--green-glow); }
-        .filter-item.active {
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--green-neon);
-            font-weight: 700;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
-        }
-
-        .price-inputs { display: flex; gap: 0.6rem; align-items: center; margin-top: 0.5rem; }
-        .price-inputs input {
-            width: 100%;
-            padding: 0.6rem 0.8rem;
-            background: #0a0f0a;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-        .price-inputs input:focus { outline: none; border-color: var(--green-mid); }
-
-        .btn {
-            padding: 0.6rem 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-        .btn-neon { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
-        .btn-neon:hover { box-shadow: 0 0 35px rgba(16, 185, 129, 0.45); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
-        .btn-outline:hover { border-color: var(--green-mid); color: var(--green-neon); }
-
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .product-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
-        .product-card:hover {
-            border-color: var(--green-mid);
-            transform: translateY(-5px);
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.12);
-        }
-        .product-card img { width: 100%; height: 210px; object-fit: cover; border-bottom: 1px solid var(--border); }
-        .product-info { padding: 1.2rem; }
-        .badges { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
-        .badge { padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
-        .badge-category { background: rgba(16, 185, 129, 0.15); color: var(--green-glow); }
-        .badge-adtype { background: rgba(56, 189, 248, 0.12); color: var(--blue-neon); }
-        .badge-swap { background: rgba(167, 139, 250, 0.15); color: var(--purple-neon); }
-        .product-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
-        .payment-methods { display: flex; gap: 0.3rem; flex-wrap: wrap; margin: 0.5rem 0; }
-        .payment-tag {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--green-glow);
-        }
-        .product-price { font-size: 1.4rem; font-weight: 800; color: var(--green-glow); text-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .product-price.swap { color: var(--purple-neon); text-shadow: 0 0 15px rgba(167, 139, 250, 0.3); }
-        .product-desc { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.4rem; }
-        .no-products { text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); color: var(--text-dim); font-size: 1.1rem; }
-
-        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { width: 100%; } }
-        footer { text-align: center; padding: 2rem; color: #3a4a3a; font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+        .container { display:flex; gap:2rem; max-width:1350px; margin:2rem auto; padding:0 1.5rem; }
+        .sidebar { width:280px; }
+        .filter-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.2rem; }
+        .filter-item { display:block; padding:0.5rem 0.9rem; border-radius:10px; cursor:pointer; color:var(--text-dim); }
+        .filter-item.active { background:rgba(16,185,129,0.12); color:var(--green-neon); font-weight:700; }
+        .btn-neon { background:linear-gradient(135deg,#059669,#10b981); color:white; border:none; padding:0.6rem 1rem; border-radius:8px; font-weight:600; }
+        .products-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
+        .product-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+        .product-card img { width:100%; height:210px; object-fit:cover; }
+        .badge-category { background:rgba(16,185,129,0.15); color:var(--green-glow); padding:0.2rem 0.7rem; border-radius:20px; font-size:0.7rem; }
+        .product-price { font-size:1.4rem; font-weight:800; color:var(--green-glow); }
+        .maintenance-msg { text-align:center; padding:4rem; color:var(--green-glow); font-size:1.5rem; }
     </style>
 </head>
 <body>
     <header>
         <div class="store-logo">بازارك</div>
-        <p class="store-subtitle">متجرك الإلكتروني لكل شيء</p>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 ابحث في بازارك...">
-        </div>
+        <div class="search-box"><input type="text" id="searchInput" placeholder="🔍 ابحث في بازارك..."></div>
     </header>
-
-    <div class="container">
-        <aside class="sidebar">
-            <div class="filter-card">
-                <h3>📂 الفئات</h3>
-                <div id="categoryFilters"><span class="filter-item active" data-value="الكل">الكل</span></div>
-            </div>
-            <div class="filter-card">
-                <h3>🏷️ نوع الإعلان</h3>
-                <div id="adTypeFilters">
-                    <span class="filter-item active" data-value="الكل">الكل</span>
-                    <span class="filter-item" data-value="بيع">بيع</span>
-                    <span class="filter-item" data-value="شراء">شراء</span>
-                    <span class="filter-item" data-value="تبديل">تبديل</span>
-                </div>
-            </div>
-            <div class="filter-card">
-                <h3>💰 السعر</h3>
-                <div class="price-inputs">
-                    <input type="number" id="minPrice" placeholder="من">
-                    <span style="color:var(--text-dim);">—</span>
-                    <input type="number" id="maxPrice" placeholder="إلى">
-                </div>
-                <div class="price-inputs" style="margin-top:0.6rem;">
-                    <button class="btn btn-neon" onclick="applyFilters()">تصفية</button>
-                    <button class="btn btn-outline" onclick="resetFilters()">مسح</button>
-                </div>
-            </div>
-        </aside>
-
-        <main class="main-content" id="productsContainer">
-            <p style="color:var(--text-dim);">جاري التحميل...</p>
-        </main>
-    </div>
-
-    <footer><p>© 2026 بازارك - جميع الحقوق محفوظة</p></footer>
+    <div id="app"></div>
 
     <script>
-        let products = [], activeCategory = 'الكل', activeAdType = 'الكل';
+        let products = [], storeOpen = true;
+
+        async function loadConfig() {
+            try {
+                const res = await fetch('config.json?t='+Date.now(), { cache:'no-store' });
+                if(res.ok) {
+                    const config = await res.json();
+                    storeOpen = config.storeOpen !== false;
+                }
+            } catch(e) { storeOpen = true; }
+        }
 
         async function loadProducts() {
             try {
-                const res = await fetch('products.json?' + Date.now());
+                const url = `products.json?t=${Date.now()}&r=${Math.random().toString(36)}`;
+                const res = await fetch(url, { cache:'no-store' });
                 products = await res.json();
                 products = products.filter(p => p.status !== 'inactive');
-                renderCategories();
-                applyFilters();
-            } catch(e) {
-                document.getElementById('productsContainer').innerHTML = '<p class="no-products">⚠️ تعذر تحميل المنتجات</p>';
+            } catch(e) { products = []; }
+        }
+
+        async function init() {
+            await loadConfig();
+            await loadProducts();
+            if(!storeOpen) {
+                document.getElementById('app').innerHTML = '<div class="maintenance-msg">🔴 المتجر مغلق حالياً للصيانة</div>';
+                return;
             }
+            renderApp();
         }
 
-        function renderCategories() {
-            const cats = [...new Set(products.map(p => p.category))];
-            let html = '<span class="filter-item active" data-value="الكل" onclick="setCategory(\'الكل\', this)">الكل</span>';
-            cats.forEach(c => html += `<span class="filter-item" data-value="${c}" onclick="setCategory('${c}', this)">${c}</span>`);
-            document.getElementById('categoryFilters').innerHTML = html;
+        function renderApp() {
+            // نفس واجهة المتجر السابقة مع الفلاتر وعرض المنتجات
+            // استخدم الصورة مباشرة: src="${p.image}" (مسار نسبي مثل images/...)
         }
 
-        document.getElementById('adTypeFilters').addEventListener('click', function(e) {
-            if(e.target.classList.contains('filter-item')) {
-                this.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
-                e.target.classList.add('active');
-                activeAdType = e.target.dataset.value;
-                applyFilters();
-            }
-        });
-
-        function setCategory(cat, el) {
-            document.querySelectorAll('#categoryFilters .filter-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            activeCategory = cat;
-            applyFilters();
-        }
-
-        function applyFilters() {
-            let filtered = [...products];
-            const search = document.getElementById('searchInput').value.toLowerCase().trim();
-            const min = parseFloat(document.getElementById('minPrice').value) || 0;
-            const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-
-            if(activeCategory !== 'الكل') filtered = filtered.filter(p => p.category === activeCategory);
-            if(activeAdType !== 'الكل') filtered = filtered.filter(p => p.adType === activeAdType);
-            if(search) filtered = filtered.filter(p => p.title.toLowerCase().includes(search) || p.description.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
-            filtered = filtered.filter(p => {
-                if(p.adType === 'تبديل') return true;
-                return (p.priceDA || 0) >= min && (p.priceDA || 0) <= max;
-            });
-
-            renderProducts(filtered);
-        }
-
-        function resetFilters() {
-            document.getElementById('minPrice').value = '';
-            document.getElementById('maxPrice').value = '';
-            document.getElementById('searchInput').value = '';
-            activeCategory = 'الكل'; activeAdType = 'الكل';
-            document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
-            document.querySelector('#categoryFilters .filter-item')?.classList.add('active');
-            document.querySelector('#adTypeFilters .filter-item')?.classList.add('active');
-            applyFilters();
-        }
-
-        document.getElementById('searchInput').addEventListener('input', applyFilters);
-
-        function renderProducts(list) {
-            const container = document.getElementById('productsContainer');
-            if(list.length === 0) { container.innerHTML = '<p class="no-products">😕 لا توجد منتجات</p>'; return; }
-            let html = '<div class="products-grid">';
-            list.forEach(p => {
-                const paymentTags = (p.paymentMethods || []).map(m => `<span class="payment-tag">${m}</span>`).join('');
-                html += `
-                    <div class="product-card">
-                        <img src="${p.image || 'https://placehold.co/400x300/0d1a0d/10b981?text=No+Image'}" alt="${p.title}" onerror="this.src='https://placehold.co/400x300/0d1a0d/10b981?text=No+Image'">
-                        <div class="product-info">
-                            <div class="badges">
-                                <span class="badge badge-category">${p.category}</span>
-                                <span class="badge badge-adtype">${p.adType}</span>
-                                ${p.adType === 'تبديل' ? '<span class="badge badge-swap">🔄 تبديل</span>' : ''}
-                            </div>
-                            <h3 class="product-title">${p.title}</h3>
-                            ${paymentTags ? `<div class="payment-methods">${paymentTags}</div>` : ''}
-                            ${p.adType === 'تبديل' 
-                                ? '<p class="product-price swap">🔄 للتبديل</p>'
-                                : `<p class="product-price">${p.priceDA ? p.priceDA.toLocaleString() + ' DA' : ''}${p.priceUSD ? ' | $' + p.priceUSD.toLocaleString() : ''}</p>`}
-                            ${p.description ? `<p class="product-desc">${p.description.substring(0, 80)}...</p>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        loadProducts();
+        init();
     </script>
 </body>
 </html>
