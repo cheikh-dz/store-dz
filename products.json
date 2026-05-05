@@ -1,15 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "حساب Free Fire ممتاز",
-    "category": "Free Fire",
-    "adType": "بيع",
-    "price": 3500,
-    "image": "https://placehold.co/400x300/2563eb/white?text=FreeFire",
-    "description": "حساب مستوى 70، سكنات نادرة، جاهز للتسليم",
-    "status": "inactive"
-  },
-  {
     "id": 2,
     "title": "هدية حساب PUBG",
     "category": "PUBG",
