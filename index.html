@@ -91,6 +91,13 @@
         .product-price { font-size: 1.4rem; font-weight: 800; color: var(--green-glow); }
         .product-price.swap { color: var(--purple-neon); }
         .product-desc { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.4rem; }
+        .contact-btn {
+            display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #25D366, #128C7E); color: white;
+            border-radius: 8px; text-decoration: none; font-weight: 600;
+            font-size: 0.85rem; transition: all 0.3s;
+        }
+        .contact-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
         .no-products { text-align: center; padding: 4rem 2rem; color: var(--text-dim); }
         .maintenance-msg { text-align: center; padding: 4rem; color: var(--green-glow); font-size: 1.5rem; }
         footer { text-align: center; padding: 2rem; color: #3a4a3a; font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem; }
@@ -115,10 +122,7 @@
         async function loadConfig() {
             try {
                 const res = await fetch('config.json?t=' + Date.now(), { cache: 'no-store' });
-                if (res.ok) {
-                    const config = await res.json();
-                    storeOpen = config.storeOpen !== false;
-                }
+                if (res.ok) { const config = await res.json(); storeOpen = config.storeOpen !== false; }
             } catch (e) { storeOpen = true; }
         }
 
@@ -241,6 +245,7 @@
                             <p class="product-price${p.adType === 'تبديل' ? ' swap' : ''}">
                                 ${p.adType === 'تبديل' ? '🔄 للتبديل' : `${p.priceDA ? p.priceDA.toLocaleString() + ' DA' : ''}${p.priceUSD ? ' | $' + p.priceUSD.toLocaleString() : ''}`}
                             </p>
+                            ${p.contactLink ? `<a href="${p.contactLink}" target="_blank" rel="noopener" class="contact-btn">💬 تواصل مع البائع</a>` : ''}
                             ${p.description ? `<p class="product-desc">${p.description.substring(0, 80)}...</p>` : ''}
                         </div>
                     </div>
