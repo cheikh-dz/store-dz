@@ -1,14 +1,5 @@
 [
   {
-    "id": 2,
-    "title": "هدية حساب PUBG",
-    "category": "PUBG",
-    "adType": "مجاناً",
-    "price": null,
-    "image": "https://placehold.co/400x300/16a34a/white?text=PUBG",
-    "description": "حساب PUBG للمبتدئين مجاناً"
-  },
-  {
     "id": 3,
     "title": "شحن Google Play",
     "category": "Google Play",
