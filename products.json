@@ -7,14 +7,5 @@
     "price": null,
     "image": "https://placehold.co/400x300/16a34a/white?text=PUBG",
     "description": "حساب PUBG للمبتدئين مجاناً"
-  },
-  {
-    "id": 3,
-    "title": "شحن Google Play",
-    "category": "Google Play",
-    "adType": "بيع",
-    "price": 2000,
-    "image": "https://placehold.co/400x300/dc2626/white?text=GooglePlay",
-    "description": "كارت شحن Google Play بقيمة 20$"
   }
 ]
